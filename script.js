@@ -8,8 +8,9 @@ const cardapio = [
     categoria: "Hambúrgueres",
     imagem: "hamburguer-classico.jpg",
     acrescimos: [
+      { nome: "Cheddar", preco: 3.0 },
+      { nome: "Queijo Extra", preco: 4.0 },
       { nome: "Bacon", preco: 3.0 },
-      { nome: "Queijo Extra", preco: 2.0 },
       { nome: "Molho Especial", preco: 1.5 },
     ],
   },
@@ -21,7 +22,8 @@ const cardapio = [
     categoria: "Hambúrgueres",
     imagem: "hamburguer-bacon.jpg",
     acrescimos: [
-      { nome: "Queijo Extra", preco: 2.0 },
+      { nome: "Cheddar", preco: 3.0 },
+      { nome: "Queijo Extra", preco: 4.0 },
       { nome: "Molho Especial", preco: 1.5 },
     ],
   },
@@ -66,6 +68,19 @@ function abrirPopup(id) {
   document.getElementById("popup-descricao").innerText = produtoSelecionado.descricao;
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup").classList.add("active");
+
+  // Exibe os acréscimos
+  const listaAcrescimos = document.getElementById("lista-acrescimos");
+  listaAcrescimos.innerHTML = produtoSelecionado.acrescimos
+    .map(
+      (acrescimo) => `
+      <label>
+        <input type="checkbox" value="${acrescimo.nome}" data-preco="${acrescimo.preco}">
+        ${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})
+      </label>
+    `
+    )
+    .join("");
 }
 
 // Fecha o popup
@@ -133,7 +148,7 @@ function atualizarCarrinho() {
 
     // Adiciona os acréscimos ao item
     if (item.acrescimos.length > 0) {
-      li.innerHTML += `<ul>`;
+      li.innerHTML += `<ul class="acrescimos">`;
       item.acrescimos.forEach((acrescimo) => {
         li.innerHTML += `
           <li>+ ${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</li>
@@ -253,42 +268,59 @@ function enviarPedidoWhatsApp() {
     return;
   }
 
-  if (!rua || !numero || !bairro) {
-    alert("Por favor, insira o endereço completo.");
-    return;
-  }
-
   const metodoPagamento = document.getElementById("metodo-pagamento").value;
   const metodoRetirada = document.getElementById("metodo-retirada").value;
 
-  const itens = carrinho
-    .map((item) => {
-      const acrescimos = item.acrescimos.map((acrescimo) => `+ ${acrescimo.nome} (R$ ${acrescimo.preco.toFixed(2)})`).join(", ");
-      const observacoes = item.observacoes ? ` (${item.observacoes})` : "";
-      return `${item.nome} - ${item.quantidade}x - R$ ${(item.preco * item.quantidade).toFixed(2)}${observacoes} ${acrescimos ? `(${acrescimos})` : ""}`;
-    })
-    .join("\n");
+  // Monta o pedido
+  let pedido = `Rei do Burguer Pedidos:\n\n`;
+  pedido += `Meu nome é ${nome}, Contato: ${telefone}\n\n`;
+  pedido += `Pedido:\n`;
 
+  carrinho.forEach((item) => {
+    pedido += `${item.quantidade}x - ${item.nome}\n`;
+    pedido += `(R$ ${item.preco.toFixed(2)})\n`;
+    pedido += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
+
+    // Adiciona os acréscimos
+    if (item.acrescimos.length > 0) {
+      pedido += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome}`).join(", ")}\n`;
+    }
+
+    // Adiciona as observações
+    if (item.observacoes) {
+      pedido += `Obs: ${item.observacoes}\n`;
+    }
+
+    pedido += "*________________________________*\n";
+  });
+
+  // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
     const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
     return sum + (item.preco + valorAcrescimos) * item.quantidade;
   }, 0);
+
+  // Calcula a taxa de entrega
   const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
   const totalFinal = subtotal + taxaEntrega;
 
-  const mensagem = `
-    Pedido Rei do Burguer: ${nome}
-    Telefone: ${telefone}
-    Endereço: ${endereco}
+  // Adiciona o total e o método de pagamento
+  pedido += `Encomenda: R$ ${subtotal.toFixed(2)}\n`;
+  pedido += `Frete: R$ ${taxaEntrega.toFixed(2)}\n`;
+  pedido += `Total: R$ ${totalFinal.toFixed(2)}\n\n`;
+  pedido += `Pagamento em: ${metodoPagamento}\n`;
 
-    ${itens}
+  // Adiciona o método de retirada
+  if (metodoRetirada === "Receber em Casa") {
+    pedido += `Endereço: ${endereco}\n`;
+  } else {
+    pedido += `Vou retirar no local\n`;
+  }
 
-    Subtotal: R$ ${subtotal.toFixed(2)}
-    + Frete: R$ ${taxaEntrega.toFixed(2)}
-    Total: R$ ${totalFinal.toFixed(2)}
-  `;
+  pedido += "*________________________________*";
 
-  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(mensagem)}`;
+  // Envia o pedido para o WhatsApp
+  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedido)}`;
   window.open(linkWhatsApp, "_blank");
 }
 
