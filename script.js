@@ -243,7 +243,26 @@ function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
 }
 
-// Envia o pedido para o WhatsApp
+// Função para salvar o pedido no Google Sheets
+async function salvarPedidoNoGoogleSheets(pedido) {
+  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec"; // Cole a URL do Web App aqui
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(pedido),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    console.log("Pedido salvo no Google Sheets!");
+  } else {
+    console.error("Erro ao salvar o pedido no Google Sheets.");
+  }
+}
+
+// Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
@@ -267,26 +286,26 @@ function enviarPedidoWhatsApp() {
   const metodoRetirada = document.getElementById("metodo-retirada").value;
 
   // Monta o pedido
-  let pedido = `*Rei do Burguer Pedidos*:\n\n`;
-  pedido += `Meu nome é *${nome}*, Contato: *${telefone}*\n\n`;
-  pedido += `*Pedido:*\n`;
+  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
+  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n\n`;
+  pedidoTexto += `*Pedido:*\n`;
 
   carrinho.forEach((item) => {
-    pedido += `${item.quantidade}x - ${item.nome}\n`;
-    pedido += `(R$ ${item.preco.toFixed(2)})\n`;
-    pedido += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
+    pedidoTexto += `${item.quantidade}x - ${item.nome}\n`;
+    pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
+    pedidoTexto += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
 
     // Adiciona os acréscimos
     if (item.acrescimos.length > 0) {
-      pedido += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
+      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
     }
 
     // Adiciona as observações
     if (item.observacoes) {
-      pedido += `Obs: ${item.observacoes}\n`;
+      pedidoTexto += `Obs: ${item.observacoes}\n`;
     }
 
-    pedido += "*________________________________*\n";
+    pedidoTexto += "*________________________________*\n";
   });
 
   // Calcula o subtotal
@@ -300,23 +319,38 @@ function enviarPedidoWhatsApp() {
   const totalFinal = subtotal + taxaEntrega;
 
   // Adiciona o total e o método de pagamento
-  pedido += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
-  pedido += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
-  pedido += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
-  pedido += `*Pagamento em: ${metodoPagamento}*\n`;
+  pedidoTexto += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
+  pedidoTexto += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
+  pedidoTexto += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
+  pedidoTexto += `*Pagamento em: ${metodoPagamento}*\n`;
 
   // Adiciona o método de retirada
   if (metodoRetirada === "Receber em Casa") {
-    pedido += `*Endereço: ${endereco}*\n`;
+    pedidoTexto += `*Endereço: ${endereco}*\n`;
   } else {
-    pedido += `*Vou retirar no local*\n`;
+    pedidoTexto += `*Vou retirar no local*\n`;
   }
 
-  pedido += "*________________________________*";
+  pedidoTexto += "*________________________________*";
 
   // Envia o pedido para o WhatsApp
-  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedido)}`;
+  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
+
+  // Salva o pedido no Google Sheets
+  const pedidoParaSalvar = {
+    nome,
+    telefone,
+    endereco,
+    pedido: pedidoTexto,
+    subtotal: subtotal.toFixed(2),
+    frete: taxaEntrega.toFixed(2),
+    total: totalFinal.toFixed(2),
+    metodoPagamento,
+    metodoRetirada,
+  };
+
+  salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
 // Inicializa o cardápio
