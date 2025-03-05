@@ -123,7 +123,6 @@ function atualizarCarrinho() {
   carrinho.forEach((item) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <img src="${item.imagem}" alt="${item.nome}" width="30" height="30">
       ${item.nome} - ${item.quantidade}x - R$ ${(item.preco * item.quantidade).toFixed(2)}
       <div class="quantidade-container">
         <button onclick="alterarQuantidade(${item.id}, -1)">-</button>
@@ -238,7 +237,10 @@ function fecharFinalizarPedido() {
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
+  const rua = document.getElementById("rua").value.trim();
+  const numero = document.getElementById("numero").value.trim();
+  const bairro = document.getElementById("bairro").value.trim();
+  const endereco = `${rua}, ${numero}, ${bairro}`;
 
   // Validação dos campos
   if (!nome) {
@@ -246,13 +248,13 @@ function enviarPedidoWhatsApp() {
     return;
   }
 
-  if (!telefone || !/^\d{10,11}$/.test(telefone)) {
-    alert("Por favor, insira um número de telefone válido (10 ou 11 dígitos).");
+  if (!telefone) {
+    alert("Por favor, insira um número de telefone.");
     return;
   }
 
-  if (!endereco) {
-    alert("Por favor, insira o endereço de entrega.");
+  if (!rua || !numero || !bairro) {
+    alert("Por favor, insira o endereço completo.");
     return;
   }
 
@@ -275,16 +277,18 @@ function enviarPedidoWhatsApp() {
   const totalFinal = subtotal + taxaEntrega;
 
   const mensagem = `
-    Pedido do Rei do Burguer:
-    ${itens}
-    Subtotal: R$ ${subtotal.toFixed(2)}
-    Taxa de entrega: R$ ${taxaEntrega.toFixed(2)}
-    Total: R$ ${totalFinal.toFixed(2)}
+    Pedido Rei do Burguer: ${nome}
+    Telefone: ${telefone}
     Endereço: ${endereco}
-    Método de Pagamento: ${metodoPagamento}
+
+    ${itens}
+
+    Subtotal: R$ ${subtotal.toFixed(2)}
+    + Frete: R$ ${taxaEntrega.toFixed(2)}
+    Total: R$ ${totalFinal.toFixed(2)}
   `;
 
-  const linkWhatsApp = `https://wa.me/5533967049524?text=${encodeURIComponent(mensagem)}`;
+  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(mensagem)}`;
   window.open(linkWhatsApp, "_blank");
 }
 
