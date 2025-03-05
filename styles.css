@@ -1,0 +1,231 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #000; /* Fundo preto */
+  color: #fff; /* Texto branco */
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.categorias {
+  padding: 20px;
+}
+
+.categorias h2 {
+  text-align: center;
+  color: #ffd700; /* Dourado */
+}
+
+.categoria {
+  margin-bottom: 20px;
+}
+
+.categoria h3 {
+  color: #ffd700; /* Dourado */
+  border-bottom: 2px solid #ffd700; /* Dourado */
+  padding-bottom: 5px;
+}
+
+.item {
+  background: #1a1a1a; /* Cinza escuro */
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2); /* Sombra dourada */
+}
+
+.item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.item h3 {
+  margin: 0;
+  color: #ffd700; /* Dourado */
+}
+
+.item p {
+  margin: 5px 0;
+  color: #ccc; /* Cinza claro */
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Fundo preto com transparência */
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.popup.active {
+  opacity: 1;
+}
+
+.popup-content {
+  background: #1a1a1a; /* Cinza escuro */
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  color: #fff; /* Texto branco */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.popup.active .popup-content {
+  transform: scale(1);
+}
+
+.popup-content h2 {
+  color: #ffd700; /* Dourado */
+}
+
+.popup-content input,
+.popup-content textarea,
+.popup-content select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background: #333; /* Cinza escuro */
+  color: #fff; /* Texto branco */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popup-content input:focus,
+.popup-content textarea:focus,
+.popup-content select:focus {
+  border-color: #ffd700; /* Dourado */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); /* Sombra dourada */
+}
+
+.popup-content button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffd700; /* Dourado */
+  color: #000; /* Texto preto */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.popup-content button:hover {
+  background-color: #ccac00; /* Dourado mais escuro */
+  transform: scale(1.05);
+}
+
+.carrinho-icone {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffd700;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.carrinho-icone img {
+  width: 30px;
+  height: 30px;
+}
+
+.carrinho-icone span {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 12px;
+}
+
+#carrinho-popup {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#carrinho-popup.active {
+  display: block;
+}
+
+.quantidade-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.quantidade-container button {
+  background-color: #ffd700;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.quantidade-container button:hover {
+  background-color: #ccac00;
+}
+
+.quantidade-container input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 5px;
+  background: #333;
+  color: #fff;
+}
+
+/* Logo na tela de finalizar pedido */
+.logo-finalizar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-finalizar img {
+  width: 150px;
+  height: auto;
+}
