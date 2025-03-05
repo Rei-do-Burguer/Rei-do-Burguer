@@ -249,3 +249,15 @@ body {
   width: 150px;
   height: auto;
 }
+
+/* Estilo para os checkboxes dos acréscimos */
+#lista-acrescimos label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+#lista-acrescimos input[type="checkbox"] {
+  margin-left: 10px;
+}
