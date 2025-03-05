@@ -75,8 +75,8 @@ function abrirPopup(id) {
     .map(
       (acrescimo) => `
       <label>
-        <input type="checkbox" value="${acrescimo.nome}" data-preco="${acrescimo.preco}">
         ${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})
+        <input type="checkbox" value="${acrescimo.nome}" data-preco="${acrescimo.preco}">
       </label>
     `
     )
@@ -112,13 +112,8 @@ function adicionarAoCarrinho() {
     acrescimos: acrescimosSelecionados,
   };
 
-  // Verifica se o item já está no carrinho
-  const itemExistente = carrinho.find((item) => item.id === itemCarrinho.id);
-  if (itemExistente) {
-    itemExistente.quantidade += quantidade; // Atualiza a quantidade
-  } else {
-    carrinho.push(itemCarrinho); // Adiciona o item ao carrinho
-  }
+  // Adiciona o item ao carrinho
+  carrinho.push(itemCarrinho);
 
   atualizarCarrinho();
   fecharPopup();
@@ -135,14 +130,14 @@ function atualizarCarrinho() {
   itensCarrinho.innerHTML = "";
 
   // Adiciona cada item do carrinho à lista
-  carrinho.forEach((item) => {
+  carrinho.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `
       ${item.nome} - ${item.quantidade}x - R$ ${(item.preco * item.quantidade).toFixed(2)}
       <div class="quantidade-container">
-        <button onclick="alterarQuantidade(${item.id}, -1)">-</button>
-        <input type="number" id="quantidade-${item.id}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${item.id})">
-        <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+        <button onclick="alterarQuantidade(${index}, -1)">-</button>
+        <input type="number" id="quantidade-${index}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${index})">
+        <button onclick="alterarQuantidade(${index}, 1)">+</button>
       </div>
     `;
 
@@ -186,29 +181,29 @@ function atualizarCarrinho() {
 }
 
 // Altera a quantidade de um item no carrinho
-function alterarQuantidade(id, delta) {
-  const item = carrinho.find((item) => item.id === id);
+function alterarQuantidade(index, delta) {
+  const item = carrinho[index];
   const novaQuantidade = item.quantidade + delta;
 
   if (novaQuantidade <= 0) {
     // Remove o item do carrinho se a quantidade for 0
-    carrinho = carrinho.filter((item) => item.id !== id);
+    carrinho.splice(index, 1);
   } else {
     item.quantidade = novaQuantidade;
-    document.getElementById(`quantidade-${id}`).value = novaQuantidade;
+    document.getElementById(`quantidade-${index}`).value = novaQuantidade;
   }
 
   atualizarCarrinho();
 }
 
 // Atualiza a quantidade de um item no carrinho
-function atualizarQuantidade(id) {
-  const item = carrinho.find((item) => item.id === id);
-  const novaQuantidade = parseInt(document.getElementById(`quantidade-${id}`).value);
+function atualizarQuantidade(index) {
+  const item = carrinho[index];
+  const novaQuantidade = parseInt(document.getElementById(`quantidade-${index}`).value);
 
   if (novaQuantidade <= 0) {
     // Remove o item do carrinho se a quantidade for 0
-    carrinho = carrinho.filter((item) => item.id !== id);
+    carrinho.splice(index, 1);
   } else {
     item.quantidade = novaQuantidade;
   }
@@ -272,9 +267,9 @@ function enviarPedidoWhatsApp() {
   const metodoRetirada = document.getElementById("metodo-retirada").value;
 
   // Monta o pedido
-  let pedido = `Rei do Burguer Pedidos:\n\n`;
-  pedido += `Meu nome é ${nome}, Contato: ${telefone}\n\n`;
-  pedido += `Pedido:\n`;
+  let pedido = `*Rei do Burguer Pedidos*:\n\n`;
+  pedido += `Meu nome é *${nome}*, Contato: *${telefone}*\n\n`;
+  pedido += `*Pedido:*\n`;
 
   carrinho.forEach((item) => {
     pedido += `${item.quantidade}x - ${item.nome}\n`;
@@ -283,7 +278,7 @@ function enviarPedidoWhatsApp() {
 
     // Adiciona os acréscimos
     if (item.acrescimos.length > 0) {
-      pedido += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome}`).join(", ")}\n`;
+      pedido += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
     }
 
     // Adiciona as observações
@@ -305,16 +300,16 @@ function enviarPedidoWhatsApp() {
   const totalFinal = subtotal + taxaEntrega;
 
   // Adiciona o total e o método de pagamento
-  pedido += `Encomenda: R$ ${subtotal.toFixed(2)}\n`;
-  pedido += `Frete: R$ ${taxaEntrega.toFixed(2)}\n`;
-  pedido += `Total: R$ ${totalFinal.toFixed(2)}\n\n`;
-  pedido += `Pagamento em: ${metodoPagamento}\n`;
+  pedido += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
+  pedido += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
+  pedido += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
+  pedido += `*Pagamento em: ${metodoPagamento}*\n`;
 
   // Adiciona o método de retirada
   if (metodoRetirada === "Receber em Casa") {
-    pedido += `Endereço: ${endereco}\n`;
+    pedido += `*Endereço: ${endereco}*\n`;
   } else {
-    pedido += `Vou retirar no local\n`;
+    pedido += `*Vou retirar no local*\n`;
   }
 
   pedido += "*________________________________*";
