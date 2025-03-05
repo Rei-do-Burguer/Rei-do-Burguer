@@ -219,6 +219,26 @@ body {
   color: #fff;
 }
 
+/* Estilo para as observações no carrinho */
+.observacoes {
+  font-size: 12px;
+  color: #ccc; /* Cinza claro */
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* Estilo para os acréscimos no carrinho */
+.acrescimos {
+  list-style-type: none;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.acrescimos li {
+  font-size: 12px;
+  color: #ccc; /* Cinza claro */
+}
+
 /* Logo na tela de finalizar pedido */
 .logo-finalizar {
   text-align: center;
