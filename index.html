@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rei do Burguer - Delivery</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Favicon (logo na barra da guia) -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/XYPwkzfp/1736794949685.png">
+</head>
+<body>
+  <!-- Banner -->
+  <div class="banner">
+    <img src="https://i.postimg.cc/8Pv39cBb/banner.jpg" alt="Banner Rei do Burguer">
+  </div>
+
+  <!-- Cardápio -->
+  <div class="categorias">
+    <h2>Cardápio</h2>
+    <div id="cardapio"></div>
+  </div>
+
+  <!-- Popup de Detalhes do Produto -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2 id="popup-nome"></h2>
+      <p id="popup-descricao"></p>
+      <div class="quantidade-container">
+        <button onclick="alterarQuantidadePopup(-1)">-</button>
+        <input type="number" id="quantidade-popup" min="1" value="1" placeholder="Quantidade">
+        <button onclick="alterarQuantidadePopup(1)">+</button>
+      </div>
+      <textarea id="observacoes" placeholder="Observações (ex.: sem cebola)"></textarea>
+
+      <!-- Acréscimos -->
+      <div id="acrescimos">
+        <h3>Acréscimos</h3>
+        <div id="lista-acrescimos"></div>
+      </div>
+
+      <button onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+      <button onclick="fecharPopup()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Ícone do Carrinho -->
+  <div class="carrinho-icone" onclick="alternarCarrinho()">
+    <img src="https://cdn-icons-png.flaticon.com/512/2838/2838895.png" alt="Carrinho">
+    <span id="contador-carrinho">0</span>
+  </div>
+
+  <!-- Popup do Carrinho -->
+  <div id="carrinho-popup" class="popup">
+    <div class="popup-content">
+      <h2>Carrinho</h2>
+      <ul id="itens-carrinho"></ul>
+      <p>Subtotal: R$ <span id="subtotal-carrinho">0.00</span></p>
+      <p id="taxa-entrega">Taxa de entrega: R$ <span id="valor-taxa-entrega">0.00</span></p>
+      <p>Total: R$ <span id="total-carrinho">0.00</span></p>
+      <button onclick="finalizarPedido()">Finalizar Pedido</button>
+      <button onclick="alternarCarrinho()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Popup de Finalização do Pedido -->
+  <div id="finalizar-pedido-popup" class="popup">
+    <div class="popup-content">
+      <!-- Logo no centro superior -->
+      <div class="logo-finalizar">
+        <img src="https://i.postimg.cc/XYPwkzfp/1736794949685.png" alt="Logo Rei do Burguer">
+      </div>
+      <h2>Finalizar Pedido</h2>
+      <input type="text" id="nome" placeholder="Nome" required>
+      <input type="tel" id="telefone" placeholder="Telefone" required>
+      <input type="text" id="endereco" placeholder="Endereço (se delivery)" required>
+      <select id="metodo-pagamento">
+        <option value="Dinheiro">Dinheiro</option>
+        <option value="Crédito">Cartão de Crédito</option>
+        <option value="Débito">Cartão de Débito</option>
+        <option value="PIX">PIX</option>
+      </select>
+      <select id="metodo-retirada">
+        <option value="Receber em Casa">Receber em Casa</option>
+        <option value="Retirada no Local">Retirada no Local</option>
+      </select>
+      <button onclick="enviarPedidoWhatsApp()">Enviar Pedido</button>
+      <button onclick="fecharFinalizarPedido()">Fechar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
