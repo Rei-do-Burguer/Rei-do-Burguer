@@ -6,7 +6,7 @@ const cardapio = [
     preco: 22.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-tudo.jpg",
-    complementos: [], // Complementos serão adicionados dinamicamente
+    acrescimos: [], // Acréscimos serão adicionados dinamicamente
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const cardapio = [
     preco: 15.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-burguer.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const cardapio = [
     preco: 13.0,
     categoria: "Hamburguer Tradicional",
     imagem: "hamburguer.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ const cardapio = [
     preco: 15.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-salada.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ const cardapio = [
     preco: 16.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-egg.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ const cardapio = [
     preco: 18.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-egg-bacon.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ const cardapio = [
     preco: 17.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-bacon.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 8,
@@ -69,7 +69,7 @@ const cardapio = [
     preco: 24.0,
     categoria: "Hamburguer Premium",
     imagem: "x-real.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 9,
@@ -78,7 +78,7 @@ const cardapio = [
     preco: 32.0,
     categoria: "Hamburguer Premium",
     imagem: "x-real-duplo.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 10,
@@ -87,7 +87,7 @@ const cardapio = [
     preco: 17.0,
     categoria: "Hamburguer Premium",
     imagem: "x-principe.jpg",
-    complementos: [],
+    acrescimos: [],
   },
   {
     id: 11,
@@ -96,12 +96,12 @@ const cardapio = [
     preco: 23.0,
     categoria: "Hamburguer Premium",
     imagem: "x-principe-duplo.jpg",
-    complementos: [],
+    acrescimos: [],
   },
 ];
 
-// Complementos disponíveis
-const complementos = [
+// Acréscimos disponíveis
+const acrescimos = [
   { nome: "SMASH BURGUER 60G", preco: 3.0 },
   { nome: "BURGUER ARTESANAL 80G", preco: 4.0 },
   { nome: "BURGUER ARTESANAL 160G", preco: 8.0 },
@@ -113,16 +113,16 @@ const complementos = [
   { nome: "MOLHO DO REI", preco: 3.5 },
 ];
 
-// Adiciona complementos a todos os lanches
+// Adiciona acréscimos a todos os lanches
 cardapio.forEach((lanche) => {
-  lanche.complementos = complementos;
+  lanche.acrescimos = acrescimos;
 });
 
 // Organiza os lanches do mais barato para o mais caro
 cardapio.sort((a, b) => a.preco - b.preco);
 
-// Organiza os complementos do mais barato para o mais caro
-complementos.sort((a, b) => a.preco - b.preco);
+// Organiza os acréscimos do mais barato para o mais caro
+acrescimos.sort((a, b) => a.preco - b.preco);
 
 let carrinho = [];
 let produtoSelecionado = null;
@@ -146,12 +146,12 @@ function exibirCardapio() {
     lancheDiv.innerHTML = `
       <h3>${lanche.nome} - R$ ${lanche.preco.toFixed(2)}</h3>
       <p>${lanche.descricao}</p>
-      <h4>Complementos:</h4>
+      <h4>Acréscimos:</h4>
       <ul>
-        ${lanche.complementos
+        ${lanche.acrescimos
           .map(
-            (complemento) => `
-          <li>${complemento.nome} - R$ ${complemento.preco.toFixed(2)}</li>
+            (acrescimo) => `
+          <li>${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</li>
         `
           )
           .join("")}
@@ -170,14 +170,14 @@ function abrirPopup(id) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup").classList.add("active");
 
-  // Exibe os complementos
-  const listaComplementos = document.getElementById("lista-complementos");
-  listaComplementos.innerHTML = produtoSelecionado.complementos
+  // Exibe os acréscimos
+  const listaAcrescimos = document.getElementById("lista-acrescimos");
+  listaAcrescimos.innerHTML = produtoSelecionado.acrescimos
     .map(
-      (complemento) => `
+      (acrescimo) => `
       <label>
-        ${complemento.nome} (+ R$ ${complemento.preco.toFixed(2)})
-        <input type="checkbox" value="${complemento.nome}" data-preco="${complemento.preco}">
+        ${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})
+        <input type="checkbox" value="${acrescimo.nome}" data-preco="${acrescimo.preco}">
       </label>
     `
     )
@@ -197,10 +197,10 @@ function adicionarAoCarrinho() {
   const quantidade = parseInt(document.getElementById("quantidade-popup").value);
   const observacoes = document.getElementById("observacoes").value;
 
-  // Obtém os complementos selecionados
-  const complementosSelecionados = [];
-  document.querySelectorAll("#lista-complementos input[type='checkbox']:checked").forEach((checkbox) => {
-    complementosSelecionados.push({
+  // Obtém os acréscimos selecionados
+  const acrescimosSelecionados = [];
+  document.querySelectorAll("#lista-acrescimos input[type='checkbox']:checked").forEach((checkbox) => {
+    acrescimosSelecionados.push({
       nome: checkbox.value,
       preco: parseFloat(checkbox.dataset.preco),
     });
@@ -210,14 +210,14 @@ function adicionarAoCarrinho() {
     ...produtoSelecionado,
     quantidade,
     observacoes,
-    complementos: complementosSelecionados,
+    acrescimos: acrescimosSelecionados,
   };
 
   // Verifica se o item já existe no carrinho
   const itemExistente = carrinho.find((item) => 
     item.nome === itemCarrinho.nome &&
     item.observacoes === itemCarrinho.observacoes &&
-    JSON.stringify(item.complementos) === JSON.stringify(itemCarrinho.complementos)
+    JSON.stringify(item.acrescimos) === JSON.stringify(itemCarrinho.acrescimos)
   );
 
   if (itemExistente) {
@@ -248,9 +248,9 @@ function atualizarCarrinho() {
     const li = document.createElement("li");
     li.innerHTML = `
       ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}
-      <div class="complementos">
-        ${item.complementos.map((complemento) => `
-          <div>+ ${complemento.nome} - R$ ${complemento.preco.toFixed(2)}</div>
+      <div class="acrescimos">
+        ${item.acrescimos.map((acrescimo) => `
+          <div>+ ${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</div>
         `).join("")}
       </div>
       ${item.observacoes ? `<div class="observacoes">Obs: ${item.observacoes}</div>` : ""}
@@ -267,8 +267,8 @@ function atualizarCarrinho() {
 
   // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
-    const valorComplementos = item.complementos.reduce((sumComplemento, complemento) => sumComplemento + complemento.preco, 0);
-    return sum + (item.preco + valorComplementos) * item.quantidade;
+    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
+    return sum + (item.preco + valorAcrescimos) * item.quantidade;
   }, 0);
   subtotalCarrinho.innerText = subtotal.toFixed(2);
 
@@ -408,9 +408,9 @@ function enviarPedidoWhatsApp() {
     pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
     pedidoTexto += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
 
-    // Adiciona os complementos
-    if (item.complementos.length > 0) {
-      pedidoTexto += `  ${item.complementos.map((complemento) => `${complemento.nome} (+ R$ ${complemento.preco.toFixed(2)})`).join(", ")}\n`;
+    // Adiciona os acréscimos
+    if (item.acrescimos.length > 0) {
+      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
     }
 
     // Adiciona as observações
@@ -423,8 +423,8 @@ function enviarPedidoWhatsApp() {
 
   // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
-    const valorComplementos = item.complementos.reduce((sumComplemento, complemento) => sumComplemento + complemento.preco, 0);
-    return sum + (item.preco + valorComplementos) * item.quantidade;
+    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
+    return sum + (item.preco + valorAcrescimos) * item.quantidade;
   }, 0);
 
   // Calcula a taxa de entrega
