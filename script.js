@@ -277,12 +277,15 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  // URL do Google Apps Script publicado como API
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec";
+  // URL do proxy (CORS Anywhere ou seu próprio proxy)
+  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+  
+  // URL do seu Google Apps Script
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
   try {
-    // Envia a requisição POST para o Google Apps Script
-    const response = await fetch(scriptUrl, {
+    // Envia a requisição através do proxy
+    const response = await fetch(proxyUrl + scriptUrl, {
       method: "POST",
       body: JSON.stringify(pedido),
       headers: {
@@ -292,14 +295,8 @@ async function salvarPedidoNoGoogleSheets(pedido) {
 
     // Verifica se a requisição foi bem-sucedida
     if (response.ok) {
-      const data = await response.json();
-      if (data.success) {
-        console.log("Pedido salvo no Google Sheets!");
-        alert("Pedido enviado com sucesso!");
-      } else {
-        console.error("Erro ao salvar o pedido no Google Sheets.");
-        alert("Erro ao enviar o pedido. Tente novamente.");
-      }
+      console.log("Pedido salvo no Google Sheets!");
+      alert("Pedido enviado com sucesso!");
     } else {
       console.error("Erro ao salvar o pedido no Google Sheets.");
       alert("Erro ao enviar o pedido. Tente novamente.");
@@ -309,6 +306,7 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
+
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
@@ -379,12 +377,12 @@ function enviarPedidoWhatsApp() {
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Prepara os dados para enviar ao Google Sheets
+  // Salva o pedido no Google Sheets
   const pedidoParaSalvar = {
     nome,
     telefone,
     endereco,
-    pedido: JSON.stringify(carrinho), // Converte o carrinho em uma string JSON
+    pedido: carrinho,
     subtotal: subtotal.toFixed(2),
     frete: taxaEntrega.toFixed(2),
     total: totalFinal.toFixed(2),
@@ -392,7 +390,6 @@ function enviarPedidoWhatsApp() {
     metodoRetirada,
   };
 
-  // Envia os dados para o Google Sheets
   salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
