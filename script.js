@@ -167,7 +167,7 @@ function exibirCardapio() {
   });
 }
 
-// Abre o popup de detalhes do produto
+// Função para abrir o popup de detalhes do produto
 function abrirPopup(id) {
   produtoSelecionado = cardapio.find((item) => item.id === id);
   document.getElementById("popup-nome").innerText = produtoSelecionado.nome;
@@ -175,7 +175,7 @@ function abrirPopup(id) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup").classList.add("active");
 
-  // Exibe os acréscimos
+  // Exibe os acréscimos com rolagem
   const listaAcrescimos = document.getElementById("lista-acrescimos");
   listaAcrescimos.innerHTML = produtoSelecionado.acrescimos
     .map(
@@ -188,7 +188,6 @@ function abrirPopup(id) {
     )
     .join("");
 }
-
 // Fecha o popup
 function fecharPopup() {
   document.getElementById("popup").style.display = "none";
