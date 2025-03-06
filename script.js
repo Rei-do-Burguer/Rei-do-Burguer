@@ -142,22 +142,16 @@ function exibirCardapio() {
 
   cardapio.forEach((lanche) => {
     const lancheDiv = document.createElement("div");
-    lancheDiv.className = "lanche";
+    lancheDiv.className = "item";
     lancheDiv.innerHTML = `
-      <h3>${lanche.nome} - R$ ${lanche.preco.toFixed(2)}</h3>
-      <p>${lanche.descricao}</p>
-      <h4>Acréscimos:</h4>
-      <ul>
-        ${lanche.acrescimos
-          .map(
-            (acrescimo) => `
-          <li>${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</li>
-        `
-          )
-          .join("")}
-      </ul>
-      <button onclick="abrirPopup(${lanche.id})">Adicionar ao Carrinho</button>
+      <img src="${lanche.imagem}" alt="${lanche.nome}" onerror="this.src='placeholder.jpg';">
+      <div>
+        <h3>${lanche.nome}</h3>
+        <p>${lanche.descricao}</p>
+        <p>R$ ${lanche.preco.toFixed(2)}</p>
+      </div>
     `;
+    lancheDiv.onclick = () => abrirPopup(lanche.id);
     cardapioDiv.appendChild(lancheDiv);
   });
 }
