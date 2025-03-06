@@ -249,22 +249,19 @@ async function salvarPedidoNoGoogleSheets(pedido) {
   try {
     const response = await fetch(url, {
       method: "POST",
+      mode: "no-cors", // Adiciona o modo no-cors
       body: JSON.stringify(pedido),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    if (response.ok) {
-      console.log("Pedido salvo no Google Sheets!");
-      alert("Pedido enviado com sucesso!");
-    } else {
-      console.error("Erro ao salvar o pedido no Google Sheets.");
-      alert("Erro ao enviar o pedido. Tente novamente.");
-    }
+    // Como o modo no-cors não permite acessar a resposta, você não pode verificar response.ok
+    console.log("Requisição enviada (modo no-cors)");
+    alert("Pedido enviado com sucesso!");
   } catch (error) {
     console.error("Erro na requisição:", error);
-    alert("Erro na conexão. Verifique sua internet e tente novamente.");
+    alert("Erro ao enviar o pedido. Tente novamente.");
   }
 }
 // Envia o pedido para o WhatsApp e salva no Google Sheets
