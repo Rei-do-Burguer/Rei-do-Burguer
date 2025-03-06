@@ -1,4 +1,3 @@
-/* Estilos gerais */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -89,10 +88,7 @@ body {
   background: #1a1a1a;
   padding: 20px;
   border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow-y: auto;
+  width: 300px;
   text-align: center;
   color: #fff;
   transform: scale(0.9);
@@ -143,72 +139,67 @@ body {
   transform: scale(1.05);
 }
 
-/* Estilos gerais para o popup */
-.popup {
-  display: none;
+.carrinho-icone {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.popup.active {
-  opacity: 1;
-}
-
-.popup-content {
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow-y: auto;
-  text-align: center;
-  color: #fff;
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
-}
-
-.popup.active .popup-content {
-  transform: scale(1);
-}
-
-.popup-content h2 {
-  color: #ffd700;
-  margin-bottom: 10px;
-}
-
-.popup-content p {
-  margin: 10px 0;
-  color: #ccc;
-}
-
-.popup-content textarea {
-  width: 100%;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffd700;
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background: #333;
-  color: #fff;
-  resize: none; /* Impede o redimensionamento */
-}
-
-.popup-content .quantidade-container {
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  width: 50px;
+  height: 50px;
 }
 
-.popup-content .quantidade-container button {
+.carrinho-icone img {
+  width: 30px;
+  height: 30px;
+}
+
+.carrinho-icone span {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 12px;
+}
+
+#carrinho-popup {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#carrinho-popup .popup-content {
+  max-height: 80vh; /* Limita a altura do popup */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical */
+}
+
+#carrinho-popup.active {
+  display: block;
+}
+
+/* Estilo para a caixa de edição de quantidade */
+.quantidade-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.quantidade-container button {
   background-color: #ffd700;
   color: #000;
   border: none;
@@ -219,7 +210,11 @@ body {
   margin: 0 5px;
 }
 
-.popup-content .quantidade-container input {
+.quantidade-container button:hover {
+  background-color: #ccac00;
+}
+
+.quantidade-container input {
   width: 50px;
   text-align: center;
   border: 1px solid #333;
@@ -229,25 +224,49 @@ body {
   color: #fff;
 }
 
-/* Estilo para a lista de acréscimos com rolagem */
-.lista-acrescimos {
-  max-height: 150px;
-  overflow-y: auto;
+/* Estilo para a linha divisória */
+.divisoria {
+  width: 100%;
+  height: 1px;
+  background-color: #ffd700;
   margin: 10px 0;
-  padding: 10px;
-  background: #333;
-  border-radius: 5px;
+}
+.observacoes {
+  font-size: 12px;
+  color: #ccc;
+  margin-top: 5px;
+  font-style: italic;
 }
 
-.lista-acrescimos label {
+.acrescimos {
+  list-style-type: none;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.acrescimos li {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.logo-finalizar {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-finalizar img {
+  width: 150px;
+  height: auto;
+}
+
+#lista-acrescimos label {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 5px 0;
-  color: #fff;
 }
 
-.lista-acrescimos input[type="checkbox"] {
+#lista-acrescimos input[type="checkbox"] {
   appearance: none;
   width: 16px;
   height: 16px;
@@ -257,57 +276,27 @@ body {
   position: relative;
 }
 
-.lista-acrescimos input[type="checkbox"]:checked::before {
+#lista-acrescimos input[type="checkbox"]:checked::before {
   content: "✔";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ffd700;
-  font-size: 12px;
+  font-size: 11px;
 }
 
-/* Estilo para os botões do popup */
-.botoes-popup {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.botoes-popup button {
-  flex: 1;
-  margin: 0 5px;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #ffd700;
-  color: #000;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.botoes-popup button:hover {
-  background-color: #ccac00;
-  transform: scale(1.05);
-}
-
-/* Responsividade para dispositivos móveis */
-@media (max-width: 768px) {
-  .popup-content {
-    width: 90%;
-    max-width: 90%;
-    padding: 15px;
-  }
-
-  .lista-acrescimos {
-    max-height: 100px; /* Altura menor para dispositivos móveis */
-  }
-
-  .botoes-popup {
+/* Responsividade */
+@media (max-width: 708px) {
+  .item {
     flex-direction: column;
+    text-align: center;
   }
-
-  .botoes-popup button {
-    margin: 5px 0;
+  .item img {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  .popup-content {
+    width: 80%;
   }
 }
