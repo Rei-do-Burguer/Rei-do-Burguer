@@ -249,7 +249,6 @@ async function salvarPedidoNoGoogleSheets(pedido) {
   try {
     const response = await fetch(url, {
       method: "POST",
-      mode: "no-cors", // Adiciona o modo no-cors
       body: JSON.stringify(pedido),
       headers: {
         "Content-Type": "application/json",
@@ -268,7 +267,6 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
-
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
