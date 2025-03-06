@@ -257,7 +257,8 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     });
 
     if (response.ok) {
-      console.log("Pedido salvo no Google Sheets!");
+      const result = await response.json();
+      console.log("Pedido salvo no Google Sheets:", result);
       alert("Pedido enviado com sucesso!");
     } else {
       console.error("Erro ao salvar o pedido no Google Sheets.");
