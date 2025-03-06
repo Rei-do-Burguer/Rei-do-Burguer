@@ -46,7 +46,7 @@ function gerarIdPedido() {
   return `REI${numeros}${letras}`; // Formato: REI00PD
 }
 
-// Exibe o cardápio organizado
+// Função para exibir o cardápio organizado por categorias
 function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
   cardapioDiv.innerHTML = ""; // Limpa o conteúdo anterior
@@ -73,11 +73,7 @@ function exibirCardapio() {
       itemDiv.onclick = () => abrirPopup(item.id);
       categoriaDiv.appendChild(itemDiv);
     });
-
-    cardapioDiv.appendChild(categoriaDiv);
-  });
-}
-
+    
 // Abre o popup de detalhes do produto
 function abrirPopup(id) {
   produtoSelecionado = cardapio.find((item) => item.id === id);
