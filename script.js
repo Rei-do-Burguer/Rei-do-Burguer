@@ -111,12 +111,23 @@ function adicionarAoCarrinho() {
     acrescimos: acrescimosSelecionados,
   };
 
-  // Adiciona o item ao carrinho
-  carrinho.push(itemCarrinho);
+  // Verifica se o item já existe no carrinho
+  const itemExistente = carrinho.find((item) => 
+    item.nome === itemCarrinho.nome &&
+    item.observacoes === itemCarrinho.observacoes &&
+    JSON.stringify(item.acrescimos) === JSON.stringify(itemCarrinho.acrescimos)
+  );
+
+  if (itemExistente) {
+    // Se o item já existe, aumenta a quantidade
+    itemExistente.quantidade += itemCarrinho.quantidade;
+  } else {
+    // Se o item não existe, adiciona ao carrinho
+    carrinho.push(itemCarrinho);
+  }
 
   atualizarCarrinho();
   fecharPopup();
-  salvarCarrinho(); // Salva o carrinho no localStorage
   alert("Item adicionado ao carrinho!"); // Feedback visual
 }
 
@@ -131,15 +142,14 @@ function atualizarCarrinho() {
   itensCarrinho.innerHTML = "";
 
   // Adiciona cada item do carrinho à lista
-  carrinho.forEach((item, index) => {
+  carrinho.forEach((item) => {
     const li = document.createElement("li");
     li.innerHTML = `
       ${item.nome} - ${item.quantidade}x - R$ ${(item.preco * item.quantidade).toFixed(2)}
       <div class="quantidade-container">
-        <button onclick="alterarQuantidade(${index}, -1)">-</button>
-        <input type="number" id="quantidade-${index}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${index})">
-        <button onclick="alterarQuantidade(${index}, 1)">+</button>
-        <button onclick="removerItemDoCarrinho(${index})">Remover</button>
+        <button onclick="alterarQuantidade(${carrinho.indexOf(item)}, -1)">-</button>
+        <input type="number" id="quantidade-${carrinho.indexOf(item)}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${carrinho.indexOf(item)})">
+        <button onclick="alterarQuantidade(${carrinho.indexOf(item)}, 1)">+</button>
       </div>
     `;
 
@@ -196,7 +206,6 @@ function alterarQuantidade(index, delta) {
   }
 
   atualizarCarrinho();
-  salvarCarrinho(); // Salva o carrinho no localStorage
 }
 
 // Atualiza a quantidade de um item no carrinho
@@ -212,21 +221,6 @@ function atualizarQuantidade(index) {
   }
 
   atualizarCarrinho();
-  salvarCarrinho(); // Salva o carrinho no localStorage
-}
-
-// Remove um item do carrinho
-function removerItemDoCarrinho(index) {
-  carrinho.splice(index, 1);
-  atualizarCarrinho();
-  salvarCarrinho(); // Salva o carrinho no localStorage
-}
-
-// Limpa o carrinho
-function limparCarrinho() {
-  carrinho = [];
-  atualizarCarrinho();
-  localStorage.removeItem("carrinho"); // Remove o carrinho do localStorage
 }
 
 // Alternar visibilidade do carrinho
@@ -261,39 +255,7 @@ function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
 }
 
-// Função para salvar o pedido no Google Sheets
-async function salvarPedidoNoGoogleSheets(pedido) {
-  // URL do proxy (CORS Anywhere)
-  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-  
-  // URL do seu Google Apps Script
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec";
-
-  try {
-    // Envia a requisição através do proxy
-    const response = await fetch(proxyUrl + scriptUrl, {
-      method: "POST",
-      body: JSON.stringify(pedido),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    // Verifica se a requisição foi bem-sucedida
-    if (response.ok) {
-      console.log("Pedido salvo no Google Sheets!");
-      alert("Pedido enviado com sucesso!");
-    } else {
-      console.error("Erro ao salvar o pedido no Google Sheets.");
-      alert("Erro ao enviar o pedido. Tente novamente.");
-    }
-  } catch (error) {
-    console.error("Erro na requisição:", error);
-    alert("Erro na conexão. Verifique sua internet e tente novamente.");
-  }
-}
-
-// Envia o pedido para o WhatsApp e salva no Google Sheets
+// Envia o pedido para o WhatsApp
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
@@ -362,26 +324,7 @@ function enviarPedidoWhatsApp() {
   // Envia o pedido para o WhatsApp
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
-
-  // Prepara os dados para enviar ao Google Sheets
-  const pedidoParaSalvar = {
-    nome,
-    telefone,
-    endereco,
-    pedido: JSON.stringify(carrinho), // Converte o carrinho em uma string JSON
-    subtotal: subtotal.toFixed(2),
-    frete: taxaEntrega.toFixed(2),
-    total: totalFinal.toFixed(2),
-    metodoPagamento,
-    metodoRetirada,
-  };
-
-  // Envia os dados para o Google Sheets
-  salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
-// Inicializa o cardápio e carrega o carrinho salvo
-window.onload = () => {
-  exibirCardapio();
-  carregarCarrinho();
-};
+// Inicializa o cardápio
+exibirCardapio();
