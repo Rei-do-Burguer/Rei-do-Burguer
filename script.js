@@ -282,6 +282,14 @@ function carregarDadosUsuario() {
   }
 }
 
+// Função para gerar um ID aleatório no formato REI00PD
+function gerarIdPedido() {
+  const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0"); // Gera 2 números aleatórios
+  const letras = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + // Gera uma letra aleatória (A-Z)
+                 String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Gera outra letra aleatória (A-Z)
+  return `REI${numeros}${letras}`; // Formato: REI00PD
+}
+
 // Envia o pedido para o WhatsApp
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
@@ -306,7 +314,7 @@ function enviarPedidoWhatsApp() {
   // Monta o pedido para o WhatsApp
   let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
   pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
-  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
+  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`; // Adiciona o ID do pedido
   pedidoTexto += `*Pedido:*\n`;
 
   carrinho.forEach((item) => {
