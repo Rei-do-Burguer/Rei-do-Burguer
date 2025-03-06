@@ -244,15 +244,10 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  // URL do proxy (CORS Anywhere)
-  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-  
-  // URL do seu Google Apps Script
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
+  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
   try {
-    // Envia a requisição através do proxy
-    const response = await fetch(proxyUrl + scriptUrl, {
+    const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(pedido),
       headers: {
@@ -260,7 +255,6 @@ async function salvarPedidoNoGoogleSheets(pedido) {
       },
     });
 
-    // Verifica se a requisição foi bem-sucedida
     if (response.ok) {
       console.log("Pedido salvo no Google Sheets!");
       alert("Pedido enviado com sucesso!");
@@ -273,6 +267,7 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
+
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
@@ -291,7 +286,7 @@ function enviarPedidoWhatsApp() {
   const metodoPagamento = document.getElementById("metodo-pagamento").value;
   const metodoRetirada = document.getElementById("metodo-retirada").value;
 
-  // Monta o pedido
+  // Monta o pedido para o WhatsApp (inalterado)
   let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
   pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n\n`;
   pedidoTexto += `*Pedido:*\n`;
@@ -343,12 +338,12 @@ function enviarPedidoWhatsApp() {
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Salva o pedido no Google Sheets
+  // Salva o pedido no Google Sheets (formatado)
   const pedidoParaSalvar = {
     nome,
     telefone,
     endereco,
-    pedido: pedidoTexto,
+    pedido: carrinho, // Envia o carrinho completo para o Google Sheets
     subtotal: subtotal.toFixed(2),
     frete: taxaEntrega.toFixed(2),
     total: totalFinal.toFixed(2),
