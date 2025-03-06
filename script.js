@@ -32,6 +32,20 @@ const cardapio = [
 let carrinho = [];
 let produtoSelecionado = null;
 
+// Salva o carrinho no localStorage
+function salvarCarrinho() {
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+}
+
+// Carrega o carrinho do localStorage ao iniciar a página
+function carregarCarrinho() {
+  const carrinhoSalvo = localStorage.getItem("carrinho");
+  if (carrinhoSalvo) {
+    carrinho = JSON.parse(carrinhoSalvo);
+    atualizarCarrinho();
+  }
+}
+
 // Exibe o cardápio
 function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
@@ -46,7 +60,7 @@ function exibirCardapio() {
     itensCategoria.forEach((item) => {
       categoriaDiv.innerHTML += `
         <div class="item" onclick="abrirPopup(${item.id})">
-          <img src="${item.imagem}" alt="${item.nome}">
+          <img src="${item.imagem}" alt="${item.nome}" onerror="this.src='placeholder.jpg';">
           <div>
             <h3>${item.nome}</h3>
             <p>${item.descricao}</p>
@@ -116,6 +130,8 @@ function adicionarAoCarrinho() {
 
   atualizarCarrinho();
   fecharPopup();
+  salvarCarrinho(); // Salva o carrinho no localStorage
+  alert("Item adicionado ao carrinho!"); // Feedback visual
 }
 
 // Atualiza o carrinho
@@ -137,6 +153,7 @@ function atualizarCarrinho() {
         <button onclick="alterarQuantidade(${index}, -1)">-</button>
         <input type="number" id="quantidade-${index}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${index})">
         <button onclick="alterarQuantidade(${index}, 1)">+</button>
+        <button onclick="removerItemDoCarrinho(${index})">Remover</button>
       </div>
     `;
 
@@ -193,6 +210,7 @@ function alterarQuantidade(index, delta) {
   }
 
   atualizarCarrinho();
+  salvarCarrinho(); // Salva o carrinho no localStorage
 }
 
 // Atualiza a quantidade de um item no carrinho
@@ -208,6 +226,21 @@ function atualizarQuantidade(index) {
   }
 
   atualizarCarrinho();
+  salvarCarrinho(); // Salva o carrinho no localStorage
+}
+
+// Remove um item do carrinho
+function removerItemDoCarrinho(index) {
+  carrinho.splice(index, 1);
+  atualizarCarrinho();
+  salvarCarrinho(); // Salva o carrinho no localStorage
+}
+
+// Limpa o carrinho
+function limparCarrinho() {
+  carrinho = [];
+  atualizarCarrinho();
+  localStorage.removeItem("carrinho"); // Remove o carrinho do localStorage
 }
 
 // Alternar visibilidade do carrinho
@@ -273,6 +306,7 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
+
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
@@ -291,7 +325,7 @@ function enviarPedidoWhatsApp() {
   const metodoPagamento = document.getElementById("metodo-pagamento").value;
   const metodoRetirada = document.getElementById("metodo-retirada").value;
 
-  // Monta o pedido para o WhatsApp (inalterado)
+  // Monta o pedido para o WhatsApp
   let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
   pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n\n`;
   pedidoTexto += `*Pedido:*\n`;
@@ -343,12 +377,12 @@ function enviarPedidoWhatsApp() {
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Salva o pedido no Google Sheets (formatado)
+  // Salva o pedido no Google Sheets
   const pedidoParaSalvar = {
     nome,
     telefone,
     endereco,
-    pedido: carrinho, // Envia o carrinho completo para o Google Sheets
+    pedido: carrinho,
     subtotal: subtotal.toFixed(2),
     frete: taxaEntrega.toFixed(2),
     total: totalFinal.toFixed(2),
@@ -359,5 +393,8 @@ function enviarPedidoWhatsApp() {
   salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
-// Inicializa o cardápio
-exibirCardapio();
+// Inicializa o cardápio e carrega o carrinho salvo
+window.onload = () => {
+  exibirCardapio();
+  carregarCarrinho();
+};
