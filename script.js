@@ -281,7 +281,6 @@ function carregarDadosUsuario() {
     document.getElementById("metodo-retirada").value = dadosUsuario.metodoRetirada;
   }
 }
-
 // Função para gerar um ID aleatório no formato REI00PD
 function gerarIdPedido() {
   const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0"); // Gera 2 números aleatórios
