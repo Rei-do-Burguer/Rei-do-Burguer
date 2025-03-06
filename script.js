@@ -244,10 +244,11 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
+  const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Proxy para contornar o CORS
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(proxyUrl + scriptUrl, {
       method: "POST",
       body: JSON.stringify(pedido),
       headers: {
