@@ -277,12 +277,15 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
+  // URL do proxy (CORS Anywhere ou seu próprio proxy)
+  const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+  
   // URL do seu Google Apps Script
   const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
   try {
-    // Envia a requisição POST para o Google Apps Script
-    const response = await fetch(scriptUrl, {
+    // Envia a requisição através do proxy
+    const response = await fetch(proxyUrl + scriptUrl, {
       method: "POST",
       body: JSON.stringify(pedido),
       headers: {
@@ -303,7 +306,6 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
-
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
