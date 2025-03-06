@@ -249,6 +249,7 @@ async function salvarPedidoNoGoogleSheets(pedido) {
   try {
     const response = await fetch(url, {
       method: "POST",
+      mode: "no-cors", // Adiciona o modo no-cors
       body: JSON.stringify(pedido),
       headers: {
         "Content-Type": "application/json",
