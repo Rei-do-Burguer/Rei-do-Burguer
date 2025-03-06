@@ -245,20 +245,27 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec"; // Cole a URL do Web App aqui
+  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec"; // Substitua pela URL do Web App
 
-  const response = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(pedido),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(pedido),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (response.ok) {
-    console.log("Pedido salvo no Google Sheets!");
-  } else {
-    console.error("Erro ao salvar o pedido no Google Sheets.");
+    if (response.ok) {
+      console.log("Pedido salvo no Google Sheets!");
+      alert("Pedido enviado com sucesso!");
+    } else {
+      console.error("Erro ao salvar o pedido no Google Sheets.");
+      alert("Erro ao enviar o pedido. Tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+    alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
 
@@ -272,13 +279,8 @@ function enviarPedidoWhatsApp() {
   const endereco = `${rua}, ${numero}, ${bairro}`;
 
   // Validação dos campos
-  if (!nome) {
-    alert("Por favor, insira seu nome.");
-    return;
-  }
-
-  if (!telefone) {
-    alert("Por favor, insira um número de telefone.");
+  if (!nome || !telefone || !rua || !numero || !bairro) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
 
