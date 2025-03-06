@@ -32,20 +32,6 @@ const cardapio = [
 let carrinho = [];
 let produtoSelecionado = null;
 
-// Salva o carrinho no localStorage
-function salvarCarrinho() {
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
-}
-
-// Carrega o carrinho do localStorage ao iniciar a página
-function carregarCarrinho() {
-  const carrinhoSalvo = localStorage.getItem("carrinho");
-  if (carrinhoSalvo) {
-    carrinho = JSON.parse(carrinhoSalvo);
-    atualizarCarrinho();
-  }
-}
-
 // Exibe o cardápio
 function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
@@ -277,11 +263,11 @@ function fecharFinalizarPedido() {
 
 // Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  // URL do proxy (CORS Anywhere ou seu próprio proxy)
+  // URL do proxy (CORS Anywhere)
   const proxyUrl = "https://cors-anywhere.herokuapp.com/";
   
   // URL do seu Google Apps Script
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
+  const scriptUrl = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec";
 
   try {
     // Envia a requisição através do proxy
@@ -377,12 +363,12 @@ function enviarPedidoWhatsApp() {
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Salva o pedido no Google Sheets
+  // Prepara os dados para enviar ao Google Sheets
   const pedidoParaSalvar = {
     nome,
     telefone,
     endereco,
-    pedido: carrinho,
+    pedido: JSON.stringify(carrinho), // Converte o carrinho em uma string JSON
     subtotal: subtotal.toFixed(2),
     frete: taxaEntrega.toFixed(2),
     total: totalFinal.toFixed(2),
@@ -390,6 +376,7 @@ function enviarPedidoWhatsApp() {
     metodoRetirada,
   };
 
+  // Envia os dados para o Google Sheets
   salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
