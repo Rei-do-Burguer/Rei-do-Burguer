@@ -19,30 +19,28 @@
     <div id="cardapio"></div>
   </div>
 
- <!-- Popup de Detalhes do Produto -->
-<div id="popup" class="popup">
-  <div class="popup-content">
-    <h2 id="popup-nome"></h2>
-    <p id="popup-descricao"></p>
-    <div class="quantidade-container">
-      <button onclick="alterarQuantidadePopup(-1)">-</button>
-      <input type="number" id="quantidade-popup" min="1" value="1" placeholder="Quantidade">
-      <button onclick="alterarQuantidadePopup(1)">+</button>
-    </div>
-    <textarea id="observacoes" placeholder="Observações (ex.: sem cebola)"></textarea>
+  <!-- Popup de Detalhes do Produto -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2 id="popup-nome"></h2>
+      <p id="popup-descricao"></p>
+      <div class="quantidade-container">
+        <button onclick="alterarQuantidadePopup(-1)">-</button>
+        <input type="number" id="quantidade-popup" min="1" value="1" placeholder="Quantidade">
+        <button onclick="alterarQuantidadePopup(1)">+</button>
+      </div>
+      <textarea id="observacoes" placeholder="Observações (ex.: sem cebola)"></textarea>
 
-    <!-- Acréscimos com barra de rolagem -->
-    <div id="acrescimos">
-      <h3>Acréscimos</h3>
-      <div id="lista-acrescimos" class="lista-acrescimos"></div>
-    </div>
+      <!-- Acréscimos -->
+      <div id="acrescimos">
+        <h3>Acréscimos</h3>
+        <div id="lista-acrescimos"></div>
+      </div>
 
-    <div class="botoes-popup">
       <button onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
       <button onclick="fecharPopup()">Fechar</button>
     </div>
   </div>
-</div>
 
   <!-- Ícone do Carrinho -->
   <div class="carrinho-icone" onclick="alternarCarrinho()">
