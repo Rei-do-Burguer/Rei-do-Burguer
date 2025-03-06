@@ -183,6 +183,11 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+#carrinho-popup .popup-content {
+  max-height: 80vh; /* Limita a altura do popup */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical */
+}
+
 #carrinho-popup.active {
   display: block;
 }
