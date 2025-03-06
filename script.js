@@ -1,4 +1,3 @@
-// script.js
 const cardapio = [
   {
     id: 1,
@@ -243,8 +242,9 @@ function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
 }
 
+// Função para salvar o pedido no Google Sheets
 async function salvarPedidoNoGoogleSheets(pedido) {
-  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec"; // Substitua pela URL do Web App
+  const url = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
   try {
     const response = await fetch(url, {
@@ -267,6 +267,7 @@ async function salvarPedidoNoGoogleSheets(pedido) {
     alert("Erro na conexão. Verifique sua internet e tente novamente.");
   }
 }
+
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
