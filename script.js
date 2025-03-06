@@ -140,19 +140,30 @@ function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
   cardapioDiv.innerHTML = ""; // Limpa o conteúdo anterior
 
-  cardapio.forEach((lanche) => {
-    const lancheDiv = document.createElement("div");
-    lancheDiv.className = "item";
-    lancheDiv.innerHTML = `
-      <img src="${lanche.imagem}" alt="${lanche.nome}" onerror="this.src='placeholder.jpg';">
-      <div>
-        <h3>${lanche.nome}</h3>
-        <p>${lanche.descricao}</p>
-        <p>R$ ${lanche.preco.toFixed(2)}</p>
-      </div>
-    `;
-    lancheDiv.onclick = () => abrirPopup(lanche.id);
-    cardapioDiv.appendChild(lancheDiv);
+  const categorias = [...new Set(cardapio.map((item) => item.categoria))]; // Remove categorias duplicadas
+
+  categorias.forEach((categoria) => {
+    const categoriaDiv = document.createElement("div");
+    categoriaDiv.className = "categoria";
+    categoriaDiv.innerHTML = `<h3>${categoria}</h3>`;
+
+    const itensCategoria = cardapio.filter((item) => item.categoria === categoria);
+    itensCategoria.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "item";
+      itemDiv.innerHTML = `
+        <img src="${item.imagem}" alt="${item.nome}" onerror="this.src='placeholder.jpg';">
+        <div>
+          <h3>${item.nome}</h3>
+          <p>${item.descricao}</p>
+          <p>R$ ${item.preco.toFixed(2)}</p>
+        </div>
+      `;
+      itemDiv.onclick = () => abrirPopup(item.id);
+      categoriaDiv.appendChild(itemDiv);
+    });
+
+    cardapioDiv.appendChild(categoriaDiv);
   });
 }
 
