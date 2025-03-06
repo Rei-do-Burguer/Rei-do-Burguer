@@ -5,7 +5,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, molho especial, bacon, ovo, presunto, alface e cheddar no pão macio.",
     preco: 22.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-tudo.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-tudo.jpg",
+    complementos: [], // Complementos serão adicionados dinamicamente
   },
   {
     id: 2,
@@ -13,7 +14,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo e molho especial no pão fofinho.",
     preco: 15.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-burguer.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-burguer.jpg",
+    complementos: [],
   },
   {
     id: 3,
@@ -21,7 +23,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), tomate, alface e molho especial no pão macio.",
     preco: 13.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "hamburguer.jpg", // Adicione o nome da imagem aqui
+    imagem: "hamburguer.jpg",
+    complementos: [],
   },
   {
     id: 4,
@@ -29,7 +32,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, alface e molho especial no pão fofinho.",
     preco: 15.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-salada.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-salada.jpg",
+    complementos: [],
   },
   {
     id: 5,
@@ -37,7 +41,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, alface, cheddar e molho especial.",
     preco: 16.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-egg.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-egg.jpg",
+    complementos: [],
   },
   {
     id: 6,
@@ -45,7 +50,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, bacon, alface, cheddar e molho especial.",
     preco: 18.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-egg-bacon.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-egg-bacon.jpg",
+    complementos: [],
   },
   {
     id: 7,
@@ -53,7 +59,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
     preco: 17.0,
     categoria: "Hamburguer Tradicional",
-    imagem: "x-bacon.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-bacon.jpg",
+    complementos: [],
   },
   {
     id: 8,
@@ -61,7 +68,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
     preco: 24.0,
     categoria: "Hamburguer Premium",
-    imagem: "x-real.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-real.jpg",
+    complementos: [],
   },
   {
     id: 9,
@@ -69,7 +77,8 @@ const cardapio = [
     descricao: "2X Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
     preco: 32.0,
     categoria: "Hamburguer Premium",
-    imagem: "x-real-duplo.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-real-duplo.jpg",
+    complementos: [],
   },
   {
     id: 10,
@@ -77,7 +86,8 @@ const cardapio = [
     descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
     preco: 17.0,
     categoria: "Hamburguer Premium",
-    imagem: "x-principe.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-principe.jpg",
+    complementos: [],
   },
   {
     id: 11,
@@ -85,9 +95,65 @@ const cardapio = [
     descricao: "2X Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
     preco: 23.0,
     categoria: "Hamburguer Premium",
-    imagem: "x-principe-duplo.jpg", // Adicione o nome da imagem aqui
+    imagem: "x-principe-duplo.jpg",
+    complementos: [],
   },
 ];
+
+// Complementos disponíveis
+const complementos = [
+  { nome: "SMASH BURGUER 60G", preco: 3.0 },
+  { nome: "BURGUER ARTESANAL 80G", preco: 4.0 },
+  { nome: "BURGUER ARTESANAL 160G", preco: 8.0 },
+  { nome: "MOLHO CHEDDAR", preco: 2.5 },
+  { nome: "BACON", preco: 3.5 },
+  { nome: "OVO", preco: 1.5 },
+  { nome: "PRESUNTO", preco: 2.5 },
+  { nome: "QUEIJO", preco: 3.0 },
+  { nome: "MOLHO DO REI", preco: 3.5 },
+];
+
+// Adiciona complementos a todos os lanches
+cardapio.forEach((lanche) => {
+  lanche.complementos = complementos;
+});
+
+// Organiza os lanches do mais barato para o mais caro
+cardapio.sort((a, b) => a.preco - b.preco);
+
+// Organiza os complementos do mais barato para o mais caro
+complementos.sort((a, b) => a.preco - b.preco);
+
+// Exibe o cardápio organizado
+function exibirCardapioOrganizado() {
+  const cardapioDiv = document.getElementById("cardapio");
+  cardapioDiv.innerHTML = ""; // Limpa o conteúdo anterior
+
+  cardapio.forEach((lanche) => {
+    const lancheDiv = document.createElement("div");
+    lancheDiv.className = "lanche";
+    lancheDiv.innerHTML = `
+      <h3>${lanche.nome} - R$ ${lanche.preco.toFixed(2)}</h3>
+      <p>${lanche.descricao}</p>
+      <h4>Complementos:</h4>
+      <ul>
+        ${lanche.complementos
+          .map(
+            (complemento) => `
+          <li>${complemento.nome} - R$ ${complemento.preco.toFixed(2)}</li>
+        `
+          )
+          .join("")}
+      </ul>
+    `;
+    cardapioDiv.appendChild(lancheDiv);
+  });
+}
+
+// Inicializa a exibição do cardápio organizado
+window.onload = () => {
+  exibirCardapioOrganizado();
+};
 
 let carrinho = [];
 let produtoSelecionado = null;
