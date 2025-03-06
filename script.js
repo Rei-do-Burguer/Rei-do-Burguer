@@ -376,4 +376,52 @@ function enviarPedidoWhatsApp() {
 
     // Adiciona os acréscimos
     if (item.acrescimos.length > 0) {
-      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome}
+      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
+    }
+
+    // Adiciona as observações
+    if (item.observacoes) {
+      pedidoTexto += `Obs: ${item.observacoes}\n`;
+    }
+
+    pedidoTexto += "*________________________________*\n";
+  });
+
+  // Calcula o subtotal
+  const subtotal = carrinho.reduce((sum, item) => {
+    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
+    return sum + (item.preco + valorAcrescimos) * item.quantidade;
+  }, 0);
+
+  // Calcula a taxa de entrega
+  const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
+  const totalFinal = subtotal + taxaEntrega;
+
+  // Adiciona o total e o método de pagamento
+  pedidoTexto += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
+  pedidoTexto += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
+  pedidoTexto += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
+  pedidoTexto += `*Pagamento em: ${metodoPagamento}*\n`;
+
+  // Adiciona o método de retirada
+  if (metodoRetirada === "Receber em Casa") {
+    pedidoTexto += `*Endereço: ${endereco}*\n`;
+  } else {
+    pedidoTexto += `*Vou retirar no local*\n`;
+  }
+
+  pedidoTexto += "*________________________________*";
+
+  // Envia o pedido para o WhatsApp
+  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
+  window.open(linkWhatsApp, "_blank");
+
+  // Salva os dados do usuário no localStorage
+  salvarDadosUsuario();
+}
+
+// Inicializa o cardápio e carrega os dados do usuário
+window.onload = () => {
+  exibirCardapio();
+  carregarDadosUsuario();
+};
