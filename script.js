@@ -142,32 +142,23 @@ function atualizarCarrinho() {
   itensCarrinho.innerHTML = "";
 
   // Adiciona cada item do carrinho à lista
-  carrinho.forEach((item) => {
+  carrinho.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      ${item.nome} - ${item.quantidade}x - R$ ${(item.preco * item.quantidade).toFixed(2)}
-      <div class="quantidade-container">
-        <button onclick="alterarQuantidade(${carrinho.indexOf(item)}, -1)">-</button>
-        <input type="number" id="quantidade-${carrinho.indexOf(item)}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${carrinho.indexOf(item)})">
-        <button onclick="alterarQuantidade(${carrinho.indexOf(item)}, 1)">+</button>
+      ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}
+      <div class="acrescimos">
+        ${item.acrescimos.map((acrescimo) => `
+          <div>+ ${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</div>
+        `).join("")}
       </div>
+      ${item.observacoes ? `<div class="observacoes">Obs: ${item.observacoes}</div>` : ""}
+      <div class="quantidade-container">
+        <button onclick="alterarQuantidade(${index}, -1)">-</button>
+        <input type="number" id="quantidade-${index}" value="${item.quantidade}" min="1" onchange="atualizarQuantidade(${index})">
+        <button onclick="alterarQuantidade(${index}, 1)">+</button>
+      </div>
+      <div class="divisoria"></div>
     `;
-
-    // Adiciona os acréscimos ao item
-    if (item.acrescimos.length > 0) {
-      li.innerHTML += `<ul class="acrescimos">`;
-      item.acrescimos.forEach((acrescimo) => {
-        li.innerHTML += `
-          <li>+ ${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</li>
-        `;
-      });
-      li.innerHTML += `</ul>`;
-    }
-
-    // Adiciona as observações
-    if (item.observacoes) {
-      li.innerHTML += `<div class="observacoes">Obs: ${item.observacoes}</div>`;
-    }
 
     itensCarrinho.appendChild(li);
   });
@@ -255,6 +246,34 @@ function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
 }
 
+// Salva os dados do usuário no localStorage
+function salvarDadosUsuario() {
+  const dadosUsuario = {
+    nome: document.getElementById("nome").value,
+    telefone: document.getElementById("telefone").value,
+    rua: document.getElementById("rua").value,
+    numero: document.getElementById("numero").value,
+    bairro: document.getElementById("bairro").value,
+    metodoPagamento: document.getElementById("metodo-pagamento").value,
+    metodoRetirada: document.getElementById("metodo-retirada").value,
+  };
+  localStorage.setItem("dadosUsuario", JSON.stringify(dadosUsuario));
+}
+
+// Carrega os dados do usuário do localStorage
+function carregarDadosUsuario() {
+  const dadosUsuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  if (dadosUsuario) {
+    document.getElementById("nome").value = dadosUsuario.nome;
+    document.getElementById("telefone").value = dadosUsuario.telefone;
+    document.getElementById("rua").value = dadosUsuario.rua;
+    document.getElementById("numero").value = dadosUsuario.numero;
+    document.getElementById("bairro").value = dadosUsuario.bairro;
+    document.getElementById("metodo-pagamento").value = dadosUsuario.metodoPagamento;
+    document.getElementById("metodo-retirada").value = dadosUsuario.metodoRetirada;
+  }
+}
+
 // Envia o pedido para o WhatsApp
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
@@ -324,7 +343,13 @@ function enviarPedidoWhatsApp() {
   // Envia o pedido para o WhatsApp
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
+
+  // Salva os dados do usuário no localStorage
+  salvarDadosUsuario();
 }
 
-// Inicializa o cardápio
-exibirCardapio();
+// Inicializa o cardápio e carrega os dados do usuário
+window.onload = () => {
+  exibirCardapio();
+  carregarDadosUsuario();
+};
