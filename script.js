@@ -124,8 +124,19 @@ cardapio.sort((a, b) => a.preco - b.preco);
 // Organiza os complementos do mais barato para o mais caro
 complementos.sort((a, b) => a.preco - b.preco);
 
+let carrinho = [];
+let produtoSelecionado = null;
+
+// Função para gerar um ID aleatório no formato REI00PD
+function gerarIdPedido() {
+  const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0"); // Gera 2 números aleatórios
+  const letras = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + // Gera uma letra aleatória (A-Z)
+                 String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Gera outra letra aleatória (A-Z)
+  return `REI${numeros}${letras}`; // Formato: REI00PD
+}
+
 // Exibe o cardápio organizado
-function exibirCardapioOrganizado() {
+function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
   cardapioDiv.innerHTML = ""; // Limpa o conteúdo anterior
 
@@ -145,52 +156,9 @@ function exibirCardapioOrganizado() {
           )
           .join("")}
       </ul>
+      <button onclick="abrirPopup(${lanche.id})">Adicionar ao Carrinho</button>
     `;
     cardapioDiv.appendChild(lancheDiv);
-  });
-}
-
-// Inicializa a exibição do cardápio organizado
-window.onload = () => {
-  exibirCardapioOrganizado();
-};
-
-let carrinho = [];
-let produtoSelecionado = null;
-
-// Função para gerar um ID aleatório no formato REI00PD
-function gerarIdPedido() {
-  const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0"); // Gera 2 números aleatórios
-  const letras = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + // Gera uma letra aleatória (A-Z)
-                 String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Gera outra letra aleatória (A-Z)
-  return `REI${numeros}${letras}`; // Formato: REI00PD
-}
-
-// Exibe o cardápio
-function exibirCardapio() {
-  const cardapioDiv = document.getElementById("cardapio");
-  const categorias = [...new Set(cardapio.map((item) => item.categoria))]; // Remove categorias duplicadas
-
-  categorias.forEach((categoria) => {
-    const categoriaDiv = document.createElement("div");
-    categoriaDiv.className = "categoria";
-    categoriaDiv.innerHTML = `<h3>${categoria}</h3>`;
-
-    const itensCategoria = cardapio.filter((item) => item.categoria === categoria);
-    itensCategoria.forEach((item) => {
-      categoriaDiv.innerHTML += `
-        <div class="item" onclick="abrirPopup(${item.id})">
-          <img src="${item.imagem}" alt="${item.nome}" onerror="this.src='placeholder.jpg';">
-          <div>
-            <h3>${item.nome}</h3>
-            <p>${item.descricao}</p>
-            <p>R$ ${item.preco.toFixed(2)}</p>
-          </div>
-        </div>
-      `;
-    });
-
-    cardapioDiv.appendChild(categoriaDiv);
   });
 }
 
@@ -202,14 +170,14 @@ function abrirPopup(id) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup").classList.add("active");
 
-  // Exibe os acréscimos
-  const listaAcrescimos = document.getElementById("lista-acrescimos");
-  listaAcrescimos.innerHTML = produtoSelecionado.acrescimos
+  // Exibe os complementos
+  const listaComplementos = document.getElementById("lista-complementos");
+  listaComplementos.innerHTML = produtoSelecionado.complementos
     .map(
-      (acrescimo) => `
+      (complemento) => `
       <label>
-        ${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})
-        <input type="checkbox" value="${acrescimo.nome}" data-preco="${acrescimo.preco}">
+        ${complemento.nome} (+ R$ ${complemento.preco.toFixed(2)})
+        <input type="checkbox" value="${complemento.nome}" data-preco="${complemento.preco}">
       </label>
     `
     )
@@ -229,10 +197,10 @@ function adicionarAoCarrinho() {
   const quantidade = parseInt(document.getElementById("quantidade-popup").value);
   const observacoes = document.getElementById("observacoes").value;
 
-  // Obtém os acréscimos selecionados
-  const acrescimosSelecionados = [];
-  document.querySelectorAll("#lista-acrescimos input[type='checkbox']:checked").forEach((checkbox) => {
-    acrescimosSelecionados.push({
+  // Obtém os complementos selecionados
+  const complementosSelecionados = [];
+  document.querySelectorAll("#lista-complementos input[type='checkbox']:checked").forEach((checkbox) => {
+    complementosSelecionados.push({
       nome: checkbox.value,
       preco: parseFloat(checkbox.dataset.preco),
     });
@@ -242,14 +210,14 @@ function adicionarAoCarrinho() {
     ...produtoSelecionado,
     quantidade,
     observacoes,
-    acrescimos: acrescimosSelecionados,
+    complementos: complementosSelecionados,
   };
 
   // Verifica se o item já existe no carrinho
   const itemExistente = carrinho.find((item) => 
     item.nome === itemCarrinho.nome &&
     item.observacoes === itemCarrinho.observacoes &&
-    JSON.stringify(item.acrescimos) === JSON.stringify(itemCarrinho.acrescimos)
+    JSON.stringify(item.complementos) === JSON.stringify(itemCarrinho.complementos)
   );
 
   if (itemExistente) {
@@ -280,9 +248,9 @@ function atualizarCarrinho() {
     const li = document.createElement("li");
     li.innerHTML = `
       ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}
-      <div class="acrescimos">
-        ${item.acrescimos.map((acrescimo) => `
-          <div>+ ${acrescimo.nome} - R$ ${acrescimo.preco.toFixed(2)}</div>
+      <div class="complementos">
+        ${item.complementos.map((complemento) => `
+          <div>+ ${complemento.nome} - R$ ${complemento.preco.toFixed(2)}</div>
         `).join("")}
       </div>
       ${item.observacoes ? `<div class="observacoes">Obs: ${item.observacoes}</div>` : ""}
@@ -299,8 +267,8 @@ function atualizarCarrinho() {
 
   // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
-    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
-    return sum + (item.preco + valorAcrescimos) * item.quantidade;
+    const valorComplementos = item.complementos.reduce((sumComplemento, complemento) => sumComplemento + complemento.preco, 0);
+    return sum + (item.preco + valorComplementos) * item.quantidade;
   }, 0);
   subtotalCarrinho.innerText = subtotal.toFixed(2);
 
@@ -440,9 +408,9 @@ function enviarPedidoWhatsApp() {
     pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
     pedidoTexto += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
 
-    // Adiciona os acréscimos
-    if (item.acrescimos.length > 0) {
-      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
+    // Adiciona os complementos
+    if (item.complementos.length > 0) {
+      pedidoTexto += `  ${item.complementos.map((complemento) => `${complemento.nome} (+ R$ ${complemento.preco.toFixed(2)})`).join(", ")}\n`;
     }
 
     // Adiciona as observações
@@ -455,8 +423,8 @@ function enviarPedidoWhatsApp() {
 
   // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
-    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
-    return sum + (item.preco + valorAcrescimos) * item.quantidade;
+    const valorComplementos = item.complementos.reduce((sumComplemento, complemento) => sumComplemento + complemento.preco, 0);
+    return sum + (item.preco + valorComplementos) * item.quantidade;
   }, 0);
 
   // Calcula a taxa de entrega
