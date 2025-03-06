@@ -8,96 +8,7 @@ const cardapio = [
     imagem: "x-tudo.jpg",
     acrescimos: [], // Acréscimos serão adicionados dinamicamente
   },
-  {
-    id: 2,
-    nome: "X-Burguer",
-    descricao: "Hambúrguer artesanal (80g), queijo e molho especial no pão fofinho.",
-    preco: 15.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-burguer.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 3,
-    nome: "Hambúrguer",
-    descricao: "Hambúrguer artesanal (80g), tomate, alface e molho especial no pão macio.",
-    preco: 13.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "hamburguer.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 4,
-    nome: "X-Salada",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, alface e molho especial no pão fofinho.",
-    preco: 15.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-salada.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 5,
-    nome: "X-EGG",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, alface, cheddar e molho especial.",
-    preco: 16.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-egg.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 6,
-    nome: "X-EGG BACON",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, bacon, alface, cheddar e molho especial.",
-    preco: 18.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-egg-bacon.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 7,
-    nome: "X-Bacon",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 17.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-bacon.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 8,
-    nome: "X-REAL",
-    descricao: "Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 24.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-real.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 9,
-    nome: "X-REAL DUPLO",
-    descricao: "2X Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 32.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-real-duplo.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 10,
-    nome: "X-PRINCIPE",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 17.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-principe.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 11,
-    nome: "X-PRINCIPE DUPLO",
-    descricao: "2X Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 23.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-principe-duplo.jpg",
-    acrescimos: [],
-  },
+  // ... (outros lanches)
 ];
 
 // Acréscimos disponíveis
@@ -167,7 +78,7 @@ function exibirCardapio() {
   });
 }
 
-// Função para abrir o popup de detalhes do produto
+// Abre o popup de detalhes do produto
 function abrirPopup(id) {
   produtoSelecionado = cardapio.find((item) => item.id === id);
   document.getElementById("popup-nome").innerText = produtoSelecionado.nome;
@@ -188,6 +99,7 @@ function abrirPopup(id) {
     )
     .join("");
 }
+
 // Fecha o popup
 function fecharPopup() {
   document.getElementById("popup").style.display = "none";
