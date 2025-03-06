@@ -374,12 +374,12 @@ function enviarPedidoWhatsApp() {
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Salva o pedido no Google Sheets
+  // Prepara os dados para enviar ao Google Sheets
   const pedidoParaSalvar = {
     nome,
     telefone,
     endereco,
-    pedido: carrinho,
+    pedido: JSON.stringify(carrinho), // Converte o carrinho em uma string JSON
     subtotal: subtotal.toFixed(2),
     frete: taxaEntrega.toFixed(2),
     total: totalFinal.toFixed(2),
@@ -387,6 +387,7 @@ function enviarPedidoWhatsApp() {
     metodoRetirada,
   };
 
+  // Envia os dados para o Google Sheets
   salvarPedidoNoGoogleSheets(pedidoParaSalvar);
 }
 
