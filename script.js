@@ -243,33 +243,29 @@ function fecharFinalizarPedido() {
 }
 
 // Função para salvar o pedido no Google Sheets
-async function salvarPedidoNoGoogleSheets(pedido) {
-  const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Proxy para contornar o CORS
-  const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
+const proxyUrl = "https://cors-proxy.htmldriven.com/"; // Novo proxy
+const scriptUrl = "https://script.google.com/macros/s/AKfycbzHBoV1C49YjfCgqmV2SiOF1uuBmXkV24lHHI8-0hHN8VUefKyYzGlYK9VZl3V3u10B/exec";
 
-  try {
-    const response = await fetch(proxyUrl + scriptUrl, {
-      method: "POST",
-      body: JSON.stringify(pedido),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+try {
+  const response = await fetch(proxyUrl + scriptUrl, {
+    method: "POST",
+    body: JSON.stringify(pedido),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Pedido salvo no Google Sheets:", result);
-      alert("Pedido enviado com sucesso!");
-    } else {
-      console.error("Erro ao salvar o pedido no Google Sheets.");
-      alert("Erro ao enviar o pedido. Tente novamente.");
-    }
-  } catch (error) {
-    console.error("Erro na requisição:", error);
-    alert("Erro na conexão. Verifique sua internet e tente novamente.");
+  if (response.ok) {
+    console.log("Pedido salvo no Google Sheets!");
+    alert("Pedido enviado com sucesso!");
+  } else {
+    console.error("Erro ao salvar o pedido no Google Sheets.");
+    alert("Erro ao enviar o pedido. Tente novamente.");
   }
+} catch (error) {
+  console.error("Erro na requisição:", error);
+  alert("Erro na conexão. Verifique sua internet e tente novamente.");
 }
-
 // Envia o pedido para o WhatsApp e salva no Google Sheets
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
