@@ -260,11 +260,28 @@ body {
   height: auto;
 }
 
+#lista-acrescimos {
+  max-height: 150px; /* Altura máxima para mostrar 4 acréscimos */
+  overflow-y: auto; /* Adiciona barra de rolagem vertical */
+  margin-bottom: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 10px;
+}
+
 #lista-acrescimos label {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 5px 0;
+  padding: 5px;
+  background-color: #333;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#lista-acrescimos label:hover {
+  background-color: #444;
 }
 
 #lista-acrescimos input[type="checkbox"] {
@@ -285,6 +302,25 @@ body {
   transform: translate(-50%, -50%);
   color: #ffd700;
   font-size: 11px;
+}
+
+/* Estilo da barra de rolagem */
+#lista-acrescimos::-webkit-scrollbar {
+  width: 8px;
+}
+
+#lista-acrescimos::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 5px;
+}
+
+#lista-acrescimos::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 5px;
+}
+
+#lista-acrescimos::-webkit-scrollbar-thumb:hover {
+  background: #ccac00;
 }
 
 /* Popup de Mensagem */
