@@ -6,7 +6,7 @@ const cardapio = [
     preco: 22.0,
     categoria: "Hamburguer Tradicional",
     imagem: "x-tudo.jpg",
-    acrescimos: [], // Acréscimos serão adicionados dinamicamente
+    acrescimos: [],
   },
   {
     id: 2,
@@ -100,7 +100,6 @@ const cardapio = [
   },
 ];
 
-// Acréscimos disponíveis
 const acrescimos = [
   { nome: "SMASH BURGUER 60G", preco: 3.0 },
   { nome: "BURGUER ARTESANAL 80G", preco: 4.0 },
@@ -113,34 +112,28 @@ const acrescimos = [
   { nome: "MOLHO DO REI", preco: 3.5 },
 ];
 
-// Adiciona acréscimos a todos os lanches
 cardapio.forEach((lanche) => {
   lanche.acrescimos = acrescimos;
 });
 
-// Organiza os lanches do mais barato para o mais caro
 cardapio.sort((a, b) => a.preco - b.preco);
-
-// Organiza os acréscimos do mais barato para o mais caro
 acrescimos.sort((a, b) => a.preco - b.preco);
 
 let carrinho = [];
 let produtoSelecionado = null;
 
-// Função para gerar um ID aleatório no formato REI00PD
 function gerarIdPedido() {
-  const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0"); // Gera 2 números aleatórios
-  const letras = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + // Gera uma letra aleatória (A-Z)
-                 String.fromCharCode(65 + Math.floor(Math.random() * 26)); // Gera outra letra aleatória (A-Z)
-  return `REI${numeros}${letras}`; // Formato: REI00PD
+  const numeros = Math.floor(Math.random() * 100).toString().padStart(2, "0");
+  const letras = String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
+                 String.fromCharCode(65 + Math.floor(Math.random() * 26));
+  return `REI${numeros}${letras}`;
 }
 
-// Exibe o cardápio organizado
 function exibirCardapio() {
   const cardapioDiv = document.getElementById("cardapio");
-  cardapioDiv.innerHTML = ""; // Limpa o conteúdo anterior
+  cardapioDiv.innerHTML = "";
 
-  const categorias = [...new Set(cardapio.map((item) => item.categoria))]; // Remove categorias duplicadas
+  const categorias = [...new Set(cardapio.map((item) => item.categoria))];
 
   categorias.forEach((categoria) => {
     const categoriaDiv = document.createElement("div");
@@ -167,7 +160,6 @@ function exibirCardapio() {
   });
 }
 
-// Abre o popup de detalhes do produto
 function abrirPopup(id) {
   produtoSelecionado = cardapio.find((item) => item.id === id);
   document.getElementById("popup-nome").innerText = produtoSelecionado.nome;
@@ -175,7 +167,6 @@ function abrirPopup(id) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popup").classList.add("active");
 
-  // Exibe os acréscimos
   const listaAcrescimos = document.getElementById("lista-acrescimos");
   listaAcrescimos.innerHTML = produtoSelecionado.acrescimos
     .map(
@@ -189,20 +180,17 @@ function abrirPopup(id) {
     .join("");
 }
 
-// Fecha o popup
 function fecharPopup() {
   document.getElementById("popup").style.display = "none";
   document.getElementById("popup").classList.remove("active");
 }
 
-// Adiciona o produto ao carrinho
 function adicionarAoCarrinho() {
   if (!produtoSelecionado) return;
 
   const quantidade = parseInt(document.getElementById("quantidade-popup").value);
   const observacoes = document.getElementById("observacoes").value;
 
-  // Obtém os acréscimos selecionados
   const acrescimosSelecionados = [];
   document.querySelectorAll("#lista-acrescimos input[type='checkbox']:checked").forEach((checkbox) => {
     acrescimosSelecionados.push({
@@ -218,7 +206,6 @@ function adicionarAoCarrinho() {
     acrescimos: acrescimosSelecionados,
   };
 
-  // Verifica se o item já existe no carrinho
   const itemExistente = carrinho.find((item) => 
     item.nome === itemCarrinho.nome &&
     item.observacoes === itemCarrinho.observacoes &&
@@ -226,29 +213,24 @@ function adicionarAoCarrinho() {
   );
 
   if (itemExistente) {
-    // Se o item já existe, aumenta a quantidade
     itemExistente.quantidade += itemCarrinho.quantidade;
   } else {
-    // Se o item não existe, adiciona ao carrinho
     carrinho.push(itemCarrinho);
   }
 
   atualizarCarrinho();
   fecharPopup();
-  alert("Item adicionado ao carrinho!"); // Feedback visual
+  mostrarMensagem("Item adicionado ao carrinho!");
 }
 
-// Atualiza o carrinho
 function atualizarCarrinho() {
   const itensCarrinho = document.getElementById("itens-carrinho");
   const subtotalCarrinho = document.getElementById("subtotal-carrinho");
   const valorTaxaEntrega = document.getElementById("valor-taxa-entrega");
   const totalCarrinho = document.getElementById("total-carrinho");
 
-  // Limpa a lista de itens
   itensCarrinho.innerHTML = "";
 
-  // Adiciona cada item do carrinho à lista
   carrinho.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -270,33 +252,27 @@ function atualizarCarrinho() {
     itensCarrinho.appendChild(li);
   });
 
-  // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
     const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
     return sum + (item.preco + valorAcrescimos) * item.quantidade;
   }, 0);
   subtotalCarrinho.innerText = subtotal.toFixed(2);
 
-  // Calcula a taxa de entrega (R$ 3,00 se for delivery)
   const metodoRetirada = document.getElementById("metodo-retirada").value;
   const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
   valorTaxaEntrega.innerText = taxaEntrega.toFixed(2);
 
-  // Calcula o total
   const total = subtotal + taxaEntrega;
   totalCarrinho.innerText = total.toFixed(2);
 
-  // Atualiza o contador do carrinho
   atualizarContadorCarrinho();
 }
 
-// Altera a quantidade de um item no carrinho
 function alterarQuantidade(index, delta) {
   const item = carrinho[index];
   const novaQuantidade = item.quantidade + delta;
 
   if (novaQuantidade <= 0) {
-    // Remove o item do carrinho se a quantidade for 0
     carrinho.splice(index, 1);
   } else {
     item.quantidade = novaQuantidade;
@@ -306,13 +282,11 @@ function alterarQuantidade(index, delta) {
   atualizarCarrinho();
 }
 
-// Atualiza a quantidade de um item no carrinho
 function atualizarQuantidade(index) {
   const item = carrinho[index];
   const novaQuantidade = parseInt(document.getElementById(`quantidade-${index}`).value);
 
   if (novaQuantidade <= 0) {
-    // Remove o item do carrinho se a quantidade for 0
     carrinho.splice(index, 1);
   } else {
     item.quantidade = novaQuantidade;
@@ -321,39 +295,33 @@ function atualizarQuantidade(index) {
   atualizarCarrinho();
 }
 
-// Alternar visibilidade do carrinho
 function alternarCarrinho() {
   const carrinhoPopup = document.getElementById("carrinho-popup");
   carrinhoPopup.classList.toggle("active");
 }
 
-// Atualizar contador do carrinho
 function atualizarContadorCarrinho() {
   const contador = document.getElementById("contador-carrinho");
   contador.innerText = carrinho.reduce((total, item) => total + item.quantidade, 0);
 }
 
-// Alterar quantidade no popup de detalhes
 function alterarQuantidadePopup(delta) {
   const quantidadeInput = document.getElementById("quantidade-popup");
   let quantidade = parseInt(quantidadeInput.value);
-  quantidade = Math.max(1, quantidade + delta); // Garante que a quantidade não seja menor que 1
+  quantidade = Math.max(1, quantidade + delta);
   quantidadeInput.value = quantidade;
 }
 
-// Abre o popup de finalização do pedido
 function finalizarPedido() {
   document.getElementById("finalizar-pedido-popup").style.display = "flex";
   document.getElementById("finalizar-pedido-popup").classList.add("active");
 }
 
-// Fecha o popup de finalização do pedido
 function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").style.display = "none";
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
 }
 
-// Salva os dados do usuário no localStorage
 function salvarDadosUsuario() {
   const dadosUsuario = {
     nome: document.getElementById("nome").value,
@@ -367,7 +335,6 @@ function salvarDadosUsuario() {
   localStorage.setItem("dadosUsuario", JSON.stringify(dadosUsuario));
 }
 
-// Carrega os dados do usuário do localStorage
 function carregarDadosUsuario() {
   const dadosUsuario = JSON.parse(localStorage.getItem("dadosUsuario"));
   if (dadosUsuario) {
@@ -381,31 +348,46 @@ function carregarDadosUsuario() {
   }
 }
 
-// Envia o pedido para o WhatsApp
+function mostrarMensagem(mensagem) {
+  const mensagemPopup = document.getElementById("mensagem-popup");
+  mensagemPopup.innerText = mensagem;
+  mensagemPopup.classList.add("active");
+
+  setTimeout(() => {
+    mensagemPopup.classList.remove("active");
+  }, 3000);
+}
+
+function validarTelefone(telefone) {
+  const regex = /^\d{10,11}$/;
+  return regex.test(telefone);
+}
+
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
   const rua = document.getElementById("rua").value.trim();
   const numero = document.getElementById("numero").value.trim();
   const bairro = document.getElementById("bairro").value.trim();
-  const endereco = `${rua}, ${numero}, ${bairro}`;
 
-  // Validação dos campos
   if (!nome || !telefone || !rua || !numero || !bairro) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
+    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
 
+  if (!validarTelefone(telefone)) {
+    mostrarMensagem("Por favor, insira um número de telefone válido (10 ou 11 dígitos).");
+    return;
+  }
+
+  const endereco = `${rua}, ${numero}, ${bairro}`;
   const metodoPagamento = document.getElementById("metodo-pagamento").value;
   const metodoRetirada = document.getElementById("metodo-retirada").value;
-
-  // Gera o ID do pedido
   const idPedido = gerarIdPedido();
 
-  // Monta o pedido para o WhatsApp
   let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
   pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
-  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`; // Adiciona o ID do pedido
+  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
   pedidoTexto += `*Pedido:*\n`;
 
   carrinho.forEach((item) => {
@@ -413,12 +395,10 @@ function enviarPedidoWhatsApp() {
     pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
     pedidoTexto += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
 
-    // Adiciona os acréscimos
     if (item.acrescimos.length > 0) {
       pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
     }
 
-    // Adiciona as observações
     if (item.observacoes) {
       pedidoTexto += `Obs: ${item.observacoes}\n`;
     }
@@ -426,23 +406,19 @@ function enviarPedidoWhatsApp() {
     pedidoTexto += "*________________________________*\n";
   });
 
-  // Calcula o subtotal
   const subtotal = carrinho.reduce((sum, item) => {
     const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
     return sum + (item.preco + valorAcrescimos) * item.quantidade;
   }, 0);
 
-  // Calcula a taxa de entrega
   const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
   const totalFinal = subtotal + taxaEntrega;
 
-  // Adiciona o total e o método de pagamento
   pedidoTexto += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
   pedidoTexto += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
   pedidoTexto += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
   pedidoTexto += `*Pagamento em: ${metodoPagamento}*\n`;
 
-  // Adiciona o método de retirada
   if (metodoRetirada === "Receber em Casa") {
     pedidoTexto += `*Endereço: ${endereco}*\n`;
   } else {
@@ -451,15 +427,15 @@ function enviarPedidoWhatsApp() {
 
   pedidoTexto += "*________________________________*";
 
-  // Envia o pedido para o WhatsApp
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
-  // Salva os dados do usuário no localStorage
-  salvarDadosUsuario();
+  carrinho = [];
+  atualizarCarrinho();
+  fecharFinalizarPedido();
+  mostrarMensagem("Pedido enviado com sucesso! Obrigado.");
 }
 
-// Inicializa o cardápio e carrega os dados do usuário
 window.onload = () => {
   exibirCardapio();
   carregarDadosUsuario();
