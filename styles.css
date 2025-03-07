@@ -88,7 +88,8 @@ body {
   background: #1a1a1a;
   padding: 20px;
   border-radius: 10px;
-  width: 300px;
+  width: 90%;
+  max-width: 300px;
   text-align: center;
   color: #fff;
   transform: scale(0.9);
@@ -176,7 +177,8 @@ body {
   position: fixed;
   bottom: 80px;
   right: 20px;
-  width: 300px;
+  width: 90%;
+  max-width: 300px;
   background: #1a1a1a;
   border-radius: 10px;
   padding: 20px;
