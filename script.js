@@ -358,11 +358,6 @@ function mostrarMensagem(mensagem) {
   }, 3000);
 }
 
-function validarTelefone(telefone) {
-  const regex = /^\d{10,11}$/;
-  return regex.test(telefone);
-}
-
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
@@ -372,11 +367,6 @@ function enviarPedidoWhatsApp() {
 
   if (!nome || !telefone || !rua || !numero || !bairro) {
     mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  if (!validarTelefone(telefone)) {
-    mostrarMensagem("Por favor, insira um número de telefone válido (10 ou 11 dígitos).");
     return;
   }
 
