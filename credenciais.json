@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "xenon-muse-453216-r2",
+  "private_key_id": "530f64b1fe3809f050aa52d8c3cf0c5f4c4287eb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC29zQgRYdrWxLw\nbgEQ3eUjeFKbrKgg9wRFyfgMjjn34jJmcn8KpUSaxiBp0X1MNxWhXtacBP0psGOf\nrsrdDn1DrIA8SO+QgobNwdi2XiHwhWKKCf7nYOmKoetUuPhKlusxJ3WE/L8qk3gd\nU8xmvbF2RMt59fTxtE9VTZquTkJJidgGrse/oWqiko3IjqcZ8LcQ7bcBD5iXOg9r\n5A0JHa8iNdZdsUJgPMjwu7OASIdHbJOnLvcEpqI8/w/QkS1rqdwFoSdmA7i2qFZA\nhrq+eXcRb25podF+/VJymgKknA5VUZyxc3vnrKdO5oX4O3Q8eZ+gmrwrru3ZZxnm\nAP2pVX9tAgMBAAECggEALFrGPLKOTyS/dSC9ymh4hX5ETG/xPDiVxRNeujB6dhDU\nVgiYqqyA8qJoNi7uWJ0b9chHb4A4HTShGhNmI2vBSzgUyEiIJvi1lEjTb/Zm9Odp\nCXy92jqgsxZotdu3eWGXt41QzIH3F+uzGSz45slCraCk0TaigDvNZakQAASBxlCm\ndZ5C9AU8wOsUhhwoAwHkWcda2WWn5bsmXGbe5QmvskTJLNTwdgzXHBouFcv1n3iD\nFqUBlhI61zGAZrlj0G+GkvilNX1OpzAXRKxhwhu7ki/XRRGQZQexrDcUFDHv6WLD\nD9WIqf4Hf/+hGVdUdPcpChj2t68+okEsJn/jFRYIQQKBgQDtmvm/lj+ejmpoJQQ4\nHgfIYrA1xll8IeIHxe/NMp/OpC53ayrllTHxuJ7zpfY2Zc5AfsH1CO9+g7Lj1V40\nLzJ5gJwIegeyIRCLcRzEQ9maae/wvLHiveQexhax785Qy8gWbK4sQ7BkdheBmJb3\nyv239IbnH+wF7POHoL90iBRjTQKBgQDFIVc6KBsizllA07NTvepgdDBUgsk7n5Fo\naGO3ZFXz1DgXIOWm26qZ+TWZ5fiCgNsejbRUXHqMAqPHPL5J3KSlnYyItiRCIZCx\n7VFZ0VBrpR1ahI1LsbulEIpNvry9N8R5z78TRYzgyft662sgQy45AginDmNwBkzg\ndzDEubE8oQKBgQDGTRkzNIpUIjfcQ0iKLUYBj5vQxYHZf83M/v1sHFwTciL1t5NN\nmH7eZl8Cqfga3kyMtz3Y62Q2CmQ6kdDVbK6LiTKwQGg72iyctAJ2KsppfRCrslAk\nFKdWp6w5RRLDi8+qJ3oVp0iID6b+mgMlO10VMheEvbeWGnQFNbuT3h5l4QKBgGPJ\nr9URrkLdP9MQFyvh7D3tMvXkyqby7HF0vl18XgIywD38+iOP+Pk+bMK95iFxxvnd\nc5ZsxeAQCgX2GsFa/sGTUit2QD51rUBUSKT1zwbeq1BB3yCdFMbG66vVTMdf7oZX\nAntn7ptvw2yCtVS8jS5weB7QqsdveQT7cOV0tmJhAoGBAJf03pzFMJFCH6TGWjXL\nxnSo959+l0qkJvi5q9D40w5lDIS+WGvfu3XcSlZogSwFb7hkaqvTdlDBZnfw+OQP\nbeAt5NKPQnezmUTvW62e8bPBLR21gY+APvKdYO5k2iNdOyY0DYtYc3r6fgjhVNdS\n4pAW39R0EySGrxTkUsQmrvdR\n-----END PRIVATE KEY-----\n",
+  "client_email": "gerenciamento-de-pedidos@xenon-muse-453216-r2.iam.gserviceaccount.com",
+  "client_id": "103127007569790155034",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gerenciamento-de-pedidos%40xenon-muse-453216-r2.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
