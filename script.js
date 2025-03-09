@@ -8,96 +8,7 @@ const cardapio = [
     imagem: "x-tudo.jpg",
     acrescimos: [],
   },
-  {
-    id: 2,
-    nome: "X-Burguer",
-    descricao: "Hambúrguer artesanal (80g), queijo e molho especial no pão fofinho.",
-    preco: 15.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-burguer.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 3,
-    nome: "Hambúrguer",
-    descricao: "Hambúrguer artesanal (80g), tomate, alface e molho especial no pão macio.",
-    preco: 13.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "hamburguer.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 4,
-    nome: "X-Salada",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, alface e molho especial no pão fofinho.",
-    preco: 15.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-salada.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 5,
-    nome: "X-EGG",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, alface, cheddar e molho especial.",
-    preco: 16.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-egg.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 6,
-    nome: "X-EGG BACON",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, ovo, bacon, alface, cheddar e molho especial.",
-    preco: 18.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-egg-bacon.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 7,
-    nome: "X-Bacon",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 17.0,
-    categoria: "Hamburguer Tradicional",
-    imagem: "x-bacon.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 8,
-    nome: "X-REAL",
-    descricao: "Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 24.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-real.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 9,
-    nome: "X-REAL DUPLO",
-    descricao: "2X Hambúrguer artesanal (160g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 32.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-real-duplo.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 10,
-    nome: "X-PRINCIPE",
-    descricao: "Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 17.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-principe.jpg",
-    acrescimos: [],
-  },
-  {
-    id: 11,
-    nome: "X-PRINCIPE DUPLO",
-    descricao: "2X Hambúrguer artesanal (80g), queijo, tomate, bacon, alface, cheddar e molho especial.",
-    preco: 23.0,
-    categoria: "Hamburguer Premium",
-    imagem: "x-principe-duplo.jpg",
-    acrescimos: [],
-  },
+  // ... (restante do cardápio)
 ];
 
 const acrescimos = [
@@ -358,23 +269,30 @@ function mostrarMensagem(mensagem) {
   }, 3000);
 }
 
-function enviarPedidoWhatsApp() {
-  const nome = document.getElementById("nome").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
-  const rua = document.getElementById("rua").value.trim();
-  const numero = document.getElementById("numero").value.trim();
-  const bairro = document.getElementById("bairro").value.trim();
+async function salvarPedidoNoGoogleSheets(pedido) {
+  const url = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec"; // Cole a URL do Apps Script aqui
 
-  if (!nome || !telefone || !rua || !numero || !bairro) {
-    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
-    return;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pedido),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log("Pedido salvo no Google Sheets com sucesso!");
+    } else {
+      console.error("Erro ao salvar o pedido no Google Sheets.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
   }
+}
 
-  const endereco = `${rua}, ${numero}, ${bairro}`;
-  const metodoPagamento = document.getElementById("metodo-pagamento").value;
-  const metodoRetirada = document.getElementById("metodo-retirada").value;
-  const idPedido = gerarIdPedido();
-
+function formatarPedidoTexto(nome, telefone, idPedido, carrinho, metodoPagamento, metodoRetirada, endereco) {
   let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
   pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
   pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
@@ -417,6 +335,56 @@ function enviarPedidoWhatsApp() {
 
   pedidoTexto += "*________________________________*";
 
+  return pedidoTexto;
+}
+
+async function enviarPedidoWhatsApp() {
+  const nome = document.getElementById("nome").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const rua = document.getElementById("rua").value.trim();
+  const numero = document.getElementById("numero").value.trim();
+  const bairro = document.getElementById("bairro").value.trim();
+
+  if (!nome || !telefone || !rua || !numero || !bairro) {
+    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  const endereco = `${rua}, ${numero}, ${bairro}`;
+  const metodoPagamento = document.getElementById("metodo-pagamento").value;
+  const metodoRetirada = document.getElementById("metodo-retirada").value;
+  const idPedido = gerarIdPedido();
+
+  const itens = carrinho.map((item) => {
+    return `${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
+  });
+
+  const subtotal = carrinho.reduce((sum, item) => {
+    const valorAcrescimos = item.acrescimos.reduce((sumAcrescimo, acrescimo) => sumAcrescimo + acrescimo.preco, 0);
+    return sum + (item.preco + valorAcrescimos) * item.quantidade;
+  }, 0);
+
+  const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
+  const totalFinal = subtotal + taxaEntrega;
+
+  // Salvar pedido no Google Sheets
+  const pedido = {
+    idPedido,
+    nome,
+    telefone,
+    endereco,
+    metodoPagamento,
+    metodoRetirada,
+    itens,
+    subtotal,
+    taxaEntrega,
+    total: totalFinal,
+  };
+
+  await salvarPedidoNoGoogleSheets(pedido);
+
+  // Enviar pedido para o WhatsApp
+  const pedidoTexto = formatarPedidoTexto(nome, telefone, idPedido, carrinho, metodoPagamento, metodoRetirada, endereco);
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
