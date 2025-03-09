@@ -358,7 +358,32 @@ function mostrarMensagem(mensagem) {
   }, 3000);
 }
 
-function enviarPedidoWhatsApp() {
+// Função para salvar o pedido no Google Sheets
+async function salvarPedidoNoGoogleSheets(pedido) {
+  const url = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec"; // URL do Google Apps Script
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pedido),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log("Pedido salvo no Google Sheets com sucesso!");
+    } else {
+      console.error("Erro ao salvar o pedido no Google Sheets.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+}
+
+// Função para enviar o pedido
+async function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
   const rua = document.getElementById("rua").value.trim();
@@ -375,25 +400,8 @@ function enviarPedidoWhatsApp() {
   const metodoRetirada = document.getElementById("metodo-retirada").value;
   const idPedido = gerarIdPedido();
 
-  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
-  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
-  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
-  pedidoTexto += `*Pedido:*\n`;
-
-  carrinho.forEach((item) => {
-    pedidoTexto += `${item.quantidade}x - ${item.nome}\n`;
-    pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
-    pedidoTexto += `R$ ${(item.preco * item.quantidade).toFixed(2)}\n`;
-
-    if (item.acrescimos.length > 0) {
-      pedidoTexto += `  ${item.acrescimos.map((acrescimo) => `${acrescimo.nome} (+ R$ ${acrescimo.preco.toFixed(2)})`).join(", ")}\n`;
-    }
-
-    if (item.observacoes) {
-      pedidoTexto += `Obs: ${item.observacoes}\n`;
-    }
-
-    pedidoTexto += "*________________________________*\n";
+  const itens = carrinho.map((item) => {
+    return `${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}`;
   });
 
   const subtotal = carrinho.reduce((sum, item) => {
@@ -404,19 +412,25 @@ function enviarPedidoWhatsApp() {
   const taxaEntrega = metodoRetirada === "Receber em Casa" ? 3.0 : 0.0;
   const totalFinal = subtotal + taxaEntrega;
 
-  pedidoTexto += `*Encomenda: R$ ${subtotal.toFixed(2)}*\n`;
-  pedidoTexto += `*Frete: R$ ${taxaEntrega.toFixed(2)}*\n`;
-  pedidoTexto += `*Total: R$ ${totalFinal.toFixed(2)}*\n\n`;
-  pedidoTexto += `*Pagamento em: ${metodoPagamento}*\n`;
+  // Preparar o objeto do pedido
+  const pedido = {
+    idPedido,
+    nome,
+    telefone,
+    endereco,
+    metodoPagamento,
+    metodoRetirada,
+    itens,
+    subtotal,
+    taxaEntrega,
+    total: totalFinal,
+  };
 
-  if (metodoRetirada === "Receber em Casa") {
-    pedidoTexto += `*Endereço: ${endereco}*\n`;
-  } else {
-    pedidoTexto += `*Vou retirar no local*\n`;
-  }
+  // Salvar o pedido no Google Sheets
+  await salvarPedidoNoGoogleSheets(pedido);
 
-  pedidoTexto += "*________________________________*";
-
+  // Enviar pedido para o WhatsApp
+  const pedidoTexto = formatarPedidoTexto(nome, telefone, idPedido, carrinho, metodoPagamento, metodoRetirada, endereco);
   const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
   window.open(linkWhatsApp, "_blank");
 
