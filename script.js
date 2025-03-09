@@ -270,7 +270,7 @@ function mostrarMensagem(mensagem) {
 }
 
 async function salvarPedidoNoGoogleSheets(pedido) {
-  const url = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec"; // Cole a URL do Apps Script aqui
+  const url = "https://script.google.com/macros/s/AKfycbxCEJJkBHgVwZPCBJLB-ZDJQ7btAeK9lPlEpyEpvH95UHH3CmjbVz2i4wp_PTjYBk6l/exec"; // Substitua pelo seu novo link
 
   try {
     const response = await fetch(url, {
@@ -281,6 +281,16 @@ async function salvarPedidoNoGoogleSheets(pedido) {
       body: JSON.stringify(pedido),
     });
 
+    const result = await response.json();
+    if (result.success) {
+      console.log("Pedido salvo no Google Sheets com sucesso!");
+    } else {
+      console.error("Erro ao salvar o pedido no Google Sheets.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+}
     const result = await response.json();
     if (result.success) {
       console.log("Pedido salvo no Google Sheets com sucesso!");
