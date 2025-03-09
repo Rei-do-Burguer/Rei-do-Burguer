@@ -544,6 +544,15 @@ function mostrarMensagem(mensagem) {
 }
 
 
+  const linkWhatsApp = `https://wa.me/5533998521968?text=${encodeURIComponent(pedidoTexto)}`;
+  window.open(linkWhatsApp, "_blank");
+
+  carrinho = [];
+  atualizarCarrinho();
+  fecharFinalizarPedido();
+  mostrarMensagem("Pedido enviado com sucesso! Obrigado.");
+}
+
 window.onload = () => {
   exibirCardapio();
   carregarDadosUsuario();
