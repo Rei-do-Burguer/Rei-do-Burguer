@@ -357,6 +357,29 @@ function mostrarMensagem(mensagem) {
     mensagemPopup.classList.remove("active");
   }, 3000);
 }
+
+}
+function enviarPedidoWhatsApp() {
+  const nome = document.getElementById("nome").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const rua = document.getElementById("rua").value.trim();
+  const numero = document.getElementById("numero").value.trim();
+  const bairro = document.getElementById("bairro").value.trim();
+
+  if (!nome || !telefone || !rua || !numero || !bairro) {
+    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  const endereco = `${rua}, ${numero}, ${bairro}`;
+  const metodoPagamento = document.getElementById("metodo-pagamento").value;
+  const metodoRetirada = document.getElementById("metodo-retirada").value;
+  const idPedido = gerarIdPedido();
+
+  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
+  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
+  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
+  pedidoTexto += `*Pedido:*\n`;
 function finalizarPedido() {
     let nome = document.getElementById("nomeCliente").value;
     let telefone = document.getElementById("telefoneCliente").value;
@@ -392,36 +415,7 @@ function finalizarPedido() {
     .then(response => response.text())
     .then(data => console.log("Pedido salvo:", data))
     .catch(error => console.error("Erro ao salvar:", error));
-
-    // Gerar link do WhatsApp
-    let numeroWhatsApp = "SEU_NUMERO"; // Substitua pelo número de WhatsApp que vai receber os pedidos
-    let mensagem = `Pedido: *${idPedido}*\nCliente: *${nome}*\nTelefone: *${telefone}*\nEndereço: *${endereco}*\n\nItens: *${itensPedido}*\nTotal: *R$ ${valorTotal}*\nPagamento: *${pagamento}*`;
-    let urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
-    
-    window.open(urlWhatsApp, "_blank");
 }
-function enviarPedidoWhatsApp() {
-  const nome = document.getElementById("nome").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
-  const rua = document.getElementById("rua").value.trim();
-  const numero = document.getElementById("numero").value.trim();
-  const bairro = document.getElementById("bairro").value.trim();
-
-  if (!nome || !telefone || !rua || !numero || !bairro) {
-    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  const endereco = `${rua}, ${numero}, ${bairro}`;
-  const metodoPagamento = document.getElementById("metodo-pagamento").value;
-  const metodoRetirada = document.getElementById("metodo-retirada").value;
-  const idPedido = gerarIdPedido();
-
-  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
-  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
-  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
-  pedidoTexto += `*Pedido:*\n`;
-
   carrinho.forEach((item) => {
     pedidoTexto += `${item.quantidade}x - ${item.nome}\n`;
     pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
