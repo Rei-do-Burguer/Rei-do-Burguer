@@ -316,7 +316,49 @@ function finalizarPedido() {
   document.getElementById("finalizar-pedido-popup").style.display = "flex";
   document.getElementById("finalizar-pedido-popup").classList.add("active");
 }
+function finalizarPedido() {
+    let nome = document.getElementById("nomeCliente").value;
+    let telefone = document.getElementById("telefoneCliente").value;
+    let endereco = document.getElementById("enderecoCliente").value;
+    let pagamento = document.getElementById("pagamento").value;
+    
+    if (!nome || !telefone || !endereco || !pagamento) {
+        alert("Preencha todos os campos!");
+        return;
+    }
 
+    let idPedido = "PED-" + Math.floor(Math.random() * 100000);
+    let itensPedido = carrinho.map(item => `${item.quantidade}x ${item.nome}`).join(", ");
+    let valorTotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
+
+    // URL do Apps Script
+    let urlAppsScript = "https://script.google.com/macros/s/AKfycbxMgj0LXdX0os4IA3pMIOtml91YXommmlkvesTlAsAjIhUYwxjYcpCtBbO7ktXNisdKvw/exec";
+
+    // Enviar para o Google Sheets
+    fetch(urlAppsScript, {
+        method: "POST",
+        body: JSON.stringify({
+            idPedido: idPedido,
+            nome: nome,
+            telefone: telefone,
+            endereco: endereco,
+            itens: itensPedido,
+            valorTotal: valorTotal,
+            pagamento: pagamento
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(data => console.log("Pedido salvo:", data))
+    .catch(error => console.error("Erro ao salvar:", error));
+
+    // Gerar link do WhatsApp
+    let numeroWhatsApp = "SEU_NUMERO"; // Substitua pelo número de WhatsApp que vai receber os pedidos
+    let mensagem = `Pedido: *${idPedido}*\nCliente: *${nome}*\nTelefone: *${telefone}*\nEndereço: *${endereco}*\n\nItens: *${itensPedido}*\nTotal: *R$ ${valorTotal}*\nPagamento: *${pagamento}*`;
+    let urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+    
+    window.open(urlWhatsApp, "_blank");
+}
 function fecharFinalizarPedido() {
   document.getElementById("finalizar-pedido-popup").style.display = "none";
   document.getElementById("finalizar-pedido-popup").classList.remove("active");
@@ -425,49 +467,7 @@ function enviarPedidoWhatsApp() {
   fecharFinalizarPedido();
   mostrarMensagem("Pedido enviado com sucesso! Obrigado.");
 }
-function finalizarPedido() {
-    let nome = document.getElementById("nomeCliente").value;
-    let telefone = document.getElementById("telefoneCliente").value;
-    let endereco = document.getElementById("enderecoCliente").value;
-    let pagamento = document.getElementById("pagamento").value;
-    
-    if (!nome || !telefone || !endereco || !pagamento) {
-        alert("Preencha todos os campos!");
-        return;
-    }
 
-    let idPedido = "PED-" + Math.floor(Math.random() * 100000);
-    let itensPedido = carrinho.map(item => `${item.quantidade}x ${item.nome}`).join(", ");
-    let valorTotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
-
-    // URL do Apps Script
-    let urlAppsScript = "https://script.google.com/macros/s/AKfycbxMgj0LXdX0os4IA3pMIOtml91YXommmlkvesTlAsAjIhUYwxjYcpCtBbO7ktXNisdKvw/exec";
-
-    // Enviar para o Google Sheets
-    fetch(urlAppsScript, {
-        method: "POST",
-        body: JSON.stringify({
-            idPedido: idPedido,
-            nome: nome,
-            telefone: telefone,
-            endereco: endereco,
-            itens: itensPedido,
-            valorTotal: valorTotal,
-            pagamento: pagamento
-        }),
-        headers: { "Content-Type": "application/json" }
-    })
-    .then(response => response.text())
-    .then(data => console.log("Pedido salvo:", data))
-    .catch(error => console.error("Erro ao salvar:", error));
-
-    // Gerar link do WhatsApp
-    let numeroWhatsApp = "SEU_NUMERO"; // Substitua pelo número de WhatsApp que vai receber os pedidos
-    let mensagem = `Pedido: *${idPedido}*\nCliente: *${nome}*\nTelefone: *${telefone}*\nEndereço: *${endereco}*\n\nItens: *${itensPedido}*\nTotal: *R$ ${valorTotal}*\nPagamento: *${pagamento}*`;
-    let urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
-    
-    window.open(urlWhatsApp, "_blank");
-}
   window.onload = () => {
   exibirCardapio();
   carregarDadosUsuario();
