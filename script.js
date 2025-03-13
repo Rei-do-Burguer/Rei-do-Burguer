@@ -357,39 +357,7 @@ function mostrarMensagem(mensagem) {
     mensagemPopup.classList.remove("active");
   }, 3000);
 }
-function Enviarpedidosheet() {
-    let nome = document.getElementById("nomeCliente").value;
-    let telefone = document.getElementById("telefoneCliente").value;
-    let endereco = document.getElementById("enderecoCliente").value;
-    let pagamento = document.getElementById("pagamento").value;
-    
-    if (!nome || !telefone || !endereco || !pagamento) {
-        alert("Preencha todos os campos!");
-        return;
-    }
 
-    let idPedido = "PED-" + Math.floor(Math.random() * 100000);
-    let itensPedido = carrinho.map(item => `${item.quantidade}x ${item.nome}`).join(", ");
-    let valorTotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
-
-    // URL do Apps Script
-    let urlAppsScript = "https://script.google.com/macros/s/AKfycbxMgj0LXdX0os4IA3pMIOtml91YXommmlkvesTlAsAjIhUYwxjYcpCtBbO7ktXNisdKvw/exec";
-
-    // Enviar para o Google Sheets
-    fetch(urlAppsScript, {
-        method: "POST",
-        body: JSON.stringify({
-            idPedido: idPedido,
-            nome: nome,
-            telefone: telefone,
-            endereco: endereco,
-            itens: itensPedido,
-            valorTotal: valorTotal,
-            pagamento: pagamento
-        }),
-        headers: { "Content-Type": "application/json" }
-    })
- 
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
@@ -458,7 +426,7 @@ function enviarPedidoWhatsApp() {
   mostrarMensagem("Pedido enviado com sucesso! Obrigado.");
 }
 
-  window.onload = () => {
+window.onload = () => {
   exibirCardapio();
   carregarDadosUsuario();
 };
