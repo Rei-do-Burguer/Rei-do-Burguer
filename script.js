@@ -357,7 +357,7 @@ function mostrarMensagem(mensagem) {
     mensagemPopup.classList.remove("active");
   }, 3000);
 }
-function finalizarPedido() {
+function finalizarPedidosheet() {
     let nome = document.getElementById("nomeCliente").value;
     let telefone = document.getElementById("telefoneCliente").value;
     let endereco = document.getElementById("enderecoCliente").value;
