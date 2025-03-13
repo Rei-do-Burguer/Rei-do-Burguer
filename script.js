@@ -461,6 +461,7 @@ function finalizarPedido() {
     let mensagem = `Pedido: *${idPedido}*\nCliente: *${nome}*\nTelefone: *${telefone}*\nEndereço: *${endereco}*\n\nItens: *${itensPedido}*\nTotal: *R$ ${valorTotal}*\nPagamento: *${pagamento}*`;
     let urlWhatsApp = `https://api.whatsapp.com/send?phone=SEU_NUMERO&text=${encodeURIComponent(mensagem)}`;
     
-    window.open(urlWhatsApp, "_blank");
-}
+  window.onload = () => {
+  exibirCardapio();
+  carregarDadosUsuario();
 };
