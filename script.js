@@ -440,8 +440,11 @@ function finalizarPedido() {
     let itensPedido = carrinho.map(item => `${item.quantidade}x ${item.nome}`).join(", ");
     let valorTotal = carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2);
 
+    // URL do Apps Script
+    let urlAppsScript = "https://script.google.com/macros/s/AKfycbxMgj0LXdX0os4IA3pMIOtml91YXommmlkvesTlAsAjIhUYwxjYcpCtBbO7ktXNisdKvw/exec";
+
     // Enviar para o Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbxMgj0LXdX0os4IA3pMIOtml91YXommmlkvesTlAsAjIhUYwxjYcpCtBbO7ktXNisdKvw/exec", {
+    fetch(urlAppsScript, {
         method: "POST",
         body: JSON.stringify({
             idPedido: idPedido,
@@ -453,14 +456,18 @@ function finalizarPedido() {
             pagamento: pagamento
         }),
         headers: { "Content-Type": "application/json" }
-    }).then(response => response.text())
-      .then(data => console.log("Pedido salvo:", data))
-      .catch(error => console.error("Erro ao salvar:", error));
+    })
+    .then(response => response.text())
+    .then(data => console.log("Pedido salvo:", data))
+    .catch(error => console.error("Erro ao salvar:", error));
 
     // Gerar link do WhatsApp
+    let numeroWhatsApp = "SEU_NUMERO"; // Substitua pelo número de WhatsApp que vai receber os pedidos
     let mensagem = `Pedido: *${idPedido}*\nCliente: *${nome}*\nTelefone: *${telefone}*\nEndereço: *${endereco}*\n\nItens: *${itensPedido}*\nTotal: *R$ ${valorTotal}*\nPagamento: *${pagamento}*`;
-    let urlWhatsApp = `https://api.whatsapp.com/send?phone=SEU_NUMERO&text=${encodeURIComponent(mensagem)}`;
+    let urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
     
+    window.open(urlWhatsApp, "_blank");
+}
   window.onload = () => {
   exibirCardapio();
   carregarDadosUsuario();
