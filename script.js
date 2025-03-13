@@ -316,6 +316,47 @@ function finalizarPedido() {
   document.getElementById("finalizar-pedido-popup").style.display = "flex";
   document.getElementById("finalizar-pedido-popup").classList.add("active");
 }
+
+function fecharFinalizarPedido() {
+  document.getElementById("finalizar-pedido-popup").style.display = "none";
+  document.getElementById("finalizar-pedido-popup").classList.remove("active");
+}
+
+function salvarDadosUsuario() {
+  const dadosUsuario = {
+    nome: document.getElementById("nome").value,
+    telefone: document.getElementById("telefone").value,
+    rua: document.getElementById("rua").value,
+    numero: document.getElementById("numero").value,
+    bairro: document.getElementById("bairro").value,
+    metodoPagamento: document.getElementById("metodo-pagamento").value,
+    metodoRetirada: document.getElementById("metodo-retirada").value,
+  };
+  localStorage.setItem("dadosUsuario", JSON.stringify(dadosUsuario));
+}
+
+function carregarDadosUsuario() {
+  const dadosUsuario = JSON.parse(localStorage.getItem("dadosUsuario"));
+  if (dadosUsuario) {
+    document.getElementById("nome").value = dadosUsuario.nome;
+    document.getElementById("telefone").value = dadosUsuario.telefone;
+    document.getElementById("rua").value = dadosUsuario.rua;
+    document.getElementById("numero").value = dadosUsuario.numero;
+    document.getElementById("bairro").value = dadosUsuario.bairro;
+    document.getElementById("metodo-pagamento").value = dadosUsuario.metodoPagamento;
+    document.getElementById("metodo-retirada").value = dadosUsuario.metodoRetirada;
+  }
+}
+
+function mostrarMensagem(mensagem) {
+  const mensagemPopup = document.getElementById("mensagem-popup");
+  mensagemPopup.innerText = mensagem;
+  mensagemPopup.classList.add("active");
+
+  setTimeout(() => {
+    mensagemPopup.classList.remove("active");
+  }, 3000);
+}
 function finalizarPedido() {
     let nome = document.getElementById("nomeCliente").value;
     let telefone = document.getElementById("telefoneCliente").value;
@@ -359,47 +400,6 @@ function finalizarPedido() {
     
     window.open(urlWhatsApp, "_blank");
 }
-function fecharFinalizarPedido() {
-  document.getElementById("finalizar-pedido-popup").style.display = "none";
-  document.getElementById("finalizar-pedido-popup").classList.remove("active");
-}
-
-function salvarDadosUsuario() {
-  const dadosUsuario = {
-    nome: document.getElementById("nome").value,
-    telefone: document.getElementById("telefone").value,
-    rua: document.getElementById("rua").value,
-    numero: document.getElementById("numero").value,
-    bairro: document.getElementById("bairro").value,
-    metodoPagamento: document.getElementById("metodo-pagamento").value,
-    metodoRetirada: document.getElementById("metodo-retirada").value,
-  };
-  localStorage.setItem("dadosUsuario", JSON.stringify(dadosUsuario));
-}
-
-function carregarDadosUsuario() {
-  const dadosUsuario = JSON.parse(localStorage.getItem("dadosUsuario"));
-  if (dadosUsuario) {
-    document.getElementById("nome").value = dadosUsuario.nome;
-    document.getElementById("telefone").value = dadosUsuario.telefone;
-    document.getElementById("rua").value = dadosUsuario.rua;
-    document.getElementById("numero").value = dadosUsuario.numero;
-    document.getElementById("bairro").value = dadosUsuario.bairro;
-    document.getElementById("metodo-pagamento").value = dadosUsuario.metodoPagamento;
-    document.getElementById("metodo-retirada").value = dadosUsuario.metodoRetirada;
-  }
-}
-
-function mostrarMensagem(mensagem) {
-  const mensagemPopup = document.getElementById("mensagem-popup");
-  mensagemPopup.innerText = mensagem;
-  mensagemPopup.classList.add("active");
-
-  setTimeout(() => {
-    mensagemPopup.classList.remove("active");
-  }, 3000);
-}
-
 function enviarPedidoWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
