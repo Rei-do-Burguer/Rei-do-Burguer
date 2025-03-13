@@ -357,30 +357,7 @@ function mostrarMensagem(mensagem) {
     mensagemPopup.classList.remove("active");
   }, 3000);
 }
-
-}
-function enviarPedidoWhatsApp() {
-  const nome = document.getElementById("nome").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
-  const rua = document.getElementById("rua").value.trim();
-  const numero = document.getElementById("numero").value.trim();
-  const bairro = document.getElementById("bairro").value.trim();
-
-  if (!nome || !telefone || !rua || !numero || !bairro) {
-    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  const endereco = `${rua}, ${numero}, ${bairro}`;
-  const metodoPagamento = document.getElementById("metodo-pagamento").value;
-  const metodoRetirada = document.getElementById("metodo-retirada").value;
-  const idPedido = gerarIdPedido();
-
-  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
-  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
-  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
-  pedidoTexto += `*Pedido:*\n`;
-function finalizarPedido() {
+function Enviarpedidosheet() {
     let nome = document.getElementById("nomeCliente").value;
     let telefone = document.getElementById("telefoneCliente").value;
     let endereco = document.getElementById("enderecoCliente").value;
@@ -412,10 +389,29 @@ function finalizarPedido() {
         }),
         headers: { "Content-Type": "application/json" }
     })
-    .then(response => response.text())
-    .then(data => console.log("Pedido salvo:", data))
-    .catch(error => console.error("Erro ao salvar:", error));
-}
+ 
+function enviarPedidoWhatsApp() {
+  const nome = document.getElementById("nome").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const rua = document.getElementById("rua").value.trim();
+  const numero = document.getElementById("numero").value.trim();
+  const bairro = document.getElementById("bairro").value.trim();
+
+  if (!nome || !telefone || !rua || !numero || !bairro) {
+    mostrarMensagem("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  const endereco = `${rua}, ${numero}, ${bairro}`;
+  const metodoPagamento = document.getElementById("metodo-pagamento").value;
+  const metodoRetirada = document.getElementById("metodo-retirada").value;
+  const idPedido = gerarIdPedido();
+
+  let pedidoTexto = `*Rei do Burguer Pedidos*:\n\n`;
+  pedidoTexto += `Meu nome é *${nome}*, Contato: *${telefone}*\n`;
+  pedidoTexto += `*ID do Pedido:* ${idPedido}\n\n`;
+  pedidoTexto += `*Pedido:*\n`;
+
   carrinho.forEach((item) => {
     pedidoTexto += `${item.quantidade}x - ${item.nome}\n`;
     pedidoTexto += `(R$ ${item.preco.toFixed(2)})\n`;
